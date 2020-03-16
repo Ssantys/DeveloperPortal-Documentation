@@ -10,7 +10,7 @@ We encourage you to contribute to the development of the documentation by follow
 
 ### 2. Edit the documentation on your editor of choice (locally)
 
-### 3. Submit a pull request
+### 3. Submit a pull request to this repo
 
 Your request will be reviewd and the documentation, if needed, will be updated. We will celebrate though our channels each and every meaningful contribution however minor it might be.
 
