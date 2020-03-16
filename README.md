@@ -16,4 +16,3 @@ Your request will be processed and the documentation, if needed, will be updated
 ## Acknowledgments
 
 * developer.nbg.gr
-"# DeveloperPortal-Documentation" 
