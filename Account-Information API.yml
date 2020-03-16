@@ -41,9 +41,9 @@ info:
               You can use the following redirect URL to easily test the API through the portal: *https://developer.nbg.gr/oauth2/redoc-callback*
           4. Click **"SUBMIT"**
           5. Store the APPs **"Client ID"** and **"Client Secret"**
-    3. Go to **"API PRODUCTS"** and select the **Account-Information API**
+    5. Go to **"API PRODUCTS"** and select the **Account-Information API**
 
-    4. Click **\"START USING THIS API\"**, choose your app and click
+    6. Click **\"START USING THIS API\"**, choose your app and click
     **"SUBSCRIBE"**
 
 
