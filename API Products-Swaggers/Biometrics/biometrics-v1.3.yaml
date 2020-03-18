@@ -1,0 +1,2113 @@
+swagger: '2.0'
+info:
+  title: Biometrics API
+  description: >
+    ## Functionality at a glance
+
+
+    Start integrating your application with NBG Bank and enable your customers:
+
+
+    To verify themselves using **face biometrics**:
+
+
+    1. Use the face biometrics matching endpoint  to compare two images so as to
+    verify if they depict the same person.
+
+
+    2. Execute a "liveness detection" which verifies that the user is alive by
+    using a recorded video of the user.
+
+     
+
+    ## Quick Getting Started
+
+
+    1. **Login/Register** to the NBG Technology HUB
+
+    2. Go to **"APPS"**
+    
+    3. Select your Organization and go to step 4. If you want to create a new Organization click **\"CREATE AN ORGANIZATION\"** and follow the steps below:
+        1. Enter the title of your Organization
+        2. Enter a short description of your Organization (optional)
+        3. Click **"SUBMIT"**
+
+    4. Select the Organization of choice and click **"ADD AN APPLICATION"** 
+          1. Fill in the forms (title and short description)
+          2. Check **\"Authorization Code\" and \"Client Credentials\"** 
+          3. Enter the **OAuth Redirect and Post Logout URIs** (these are the URIs that we will redirect the user upon logging in and logging out respectively)
+              
+              You can use the following redirect URL to easily test the API through the portal: *https://developer.nbg.gr/oauth2/redoc-callback*
+          4. Click **"SUBMIT"**
+          5. Store the APPs **"Client ID"** and **"Client Secret"**
+    5. Go to **"API PRODUCTS"** and select the **Biometrics API**
+    
+    6. Click **\"START USING THIS API\"**, choose your app and click
+    **"SUBSCRIBE"**
+
+    7. Create a Sandbox
+
+    8. Play with the API
+
+
+
+
+    ## Create your Sandbox
+
+
+    Sandboxes are self - contained testing environments that provide a simple
+    way of testing the API without any real impact, meaning that no personal or
+    financial data is used.
+
+    You can create **your Sandbox** by invoking the **POST** /api/sandbox call.
+    This call will generate a new Sandbox with a **unique sandbox_id**.
+
+    Important! Don't lose your sandbox_id, since you will need it for all the
+    API calls. Sandbox endpoints are not included in the production version API.
+
+
+    The following HTTP header parameters can be used (except for sandbox
+    operations):
+
+
+    1. sandbox_id (required)
+
+    2. index (can be used in order to specify/filter the response of the
+    endpoints. 
+
+    In the sandbox data model, the responses of the endpoints are saved. With
+    this header you can choose the element of the list of responses you want to
+    retrieve)
+
+
+
+
+    ## Start Testing
+
+
+    Once you have your sandbox_id, you can start invoking the rest of the
+    operations by providing the mandatory http header * *sandbox_id *.
+
+
+    ## Important notes
+
+
+    Request headers
+
+    Each request MUST have the following info:
+
+
+    *sandbox_id*
+
+
+
+
+    ## Error Codes:
+
+
+    * SBX-10000: Header is missing
+
+    * SBX-10001: Invalid header parameter sandbox_id
+
+    * SBX-10002: Invalid header parameter user_id
+
+    * SBX-10003: Invalid header parameter provider_id
+
+    * SBX-10004: Invalid header parameter provider
+
+    * SBX-10005: Invalid header parameter username
+
+    * SBX-20000: Invalid sandboxId
+
+    * SBX-20001: Concurrency exception. Please try again
+
+    * SBX-20002: Incorrect Json Format
+
+    * SBX-30000: Sandbox Not Found
+
+    * SBX-40000: Sandbox with the same sandboxId already exists!
+
+    * SBX-40001: User with the same username already exists!
+
+    * SBX-50000: User not logged in. Authentication is required
+
+    * SBX-60000: Cannot Create Sandbox
+
+    * SBX-60001: Cannot Update Sandbox
+
+    * SBX-60002: Cannot Delete Sandbox
+
+
+    ## Feedback and Questions  
+
+
+    We would love to hear your feedback and answer your questions. Send us at
+    [developer@nbg.gr](developer@nbg.gr)
+
+
+    Check out our [Sandbox Postman
+    Collection](https://github.com/myNBGcode/PostmanCollections/tree/master/Biometrics%20API)!
+
+
+    ------------------------------------------------------------------------------------------ 
+
+
+    Created by [**NBG**](https://www.nbg.gr/).
+
+
+    ------------------------------------------------------------------------------------------ 
+
+    ------------------------------------------------------------------------------------------
+
+     # Entities 
+
+     Below, the main entities are documented.
+     <a name=FaceMatchRequest></a> 
+    ## FaceMatchRequest 
+
+    FaceMatch Request Type 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | image1| First image (a person is depicted)| string|
+
+    | image2| Second image (a person is depicted)| string|
+
+     <a name=FaceMatchResponse></a> 
+    ## FaceMatchResponse 
+
+    FaceMatch Response Type 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | matching-score| Face resemblance score [0-100]. 0 equals to absolute
+    non-match while 100 indicates that the faces are absolutely identical.|
+    integer|
+
+    | matching-level| The Mathching level of the faces. Possible values
+    [no-match, low-match, medium-match, high-match]| string|
+
+    | face-num1| The number of faces detected in the first image.| integer|
+
+    | face-num2| The number of faces detected in the second image.| integer|
+
+     <a name=LivenessCheckRequest></a> 
+    ## LivenessCheckRequest 
+
+    Liveness Check Request Type 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | frames| User video, the video is described through a list of frames.|
+    undefined|
+
+     <a name=GetUserFrameRequest></a> 
+    ## GetUserFrameRequest 
+
+    Get User Frame Request Type 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | frames| User video, the video is described through an time-ordered list of
+    frames.| undefined|
+
+     <a name=GetUserFrameResponse></a> 
+    ## GetUserFrameResponse 
+
+    Get User Frame Response Type 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | image| The video is analyzed in order to return a frame where one person
+    is detected.| string|
+
+     <a name=SandboxRequest></a> 
+    ## SandboxRequest 
+
+    Sandbox Request 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | sandbox-id| Sandbox unique identifier. E.g MySandbox| string|
+
+     <a name=SandboxDataModel></a> 
+    ## SandboxDataModel 
+
+    Sandbox Data Model 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | sandbox-id| Sandbox unique identifier. E.g MySandbox| string|
+
+    | face-match-response| Sandbox List of FaceMatch Endpoint Responses.| array|
+
+    | user-frame-response| Sandbox List of GetUserFrame Endpoint Responses.|
+    array|
+
+    | liveness-check-response| Sandbox List of LivenessCheck Endpoint
+    Responses.| array|
+
+     <a name=LivenessCheckResponse></a> 
+    ## LivenessCheckResponse 
+
+    Liveness Check Response Type 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | liveness| Whether the user in the video is a live human. Possible values
+    [passed, failed, cannot-determine]| string|
+
+    | blinked| Whether the user in the video blinked her eyes. Will be null if
+    the detection cannot determine the result.| boolean|
+
+    | smiled| Whether the user in the video smiled. Will be null if the
+    detection cannot determine the result.| boolean|
+
+    | eyebrow-moved| Whether the user in the video moved his/her eyebrow. Will
+    be null if the detection cannot determine the result.| boolean|
+  contact: {}
+  version: v1.3
+host: apis.nbg.gr
+basePath: /sandbox/biometrics/headers/v1.3/api
+schemes:
+  - https
+paths:
+  /sandbox:
+    post:
+      tags:
+        - Sandbox
+      summary: Create Sandbox
+      description: >
+        Creates a sandbox with unique sandbox id. This call can also be used to
+        create responses etc.
+      operationId: Sandbox_CreateSandbox
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: request
+          in: body
+          description: Sandbox identifier
+          required: true
+          schema:
+            $ref: '#/definitions/SandboxRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        '400':
+          description: ''
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandbox-id\":\"<ADD
+            STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandbox-id\":\"<ADD
+            STRING VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox\"\n\n\tpayload := strings.NewReader(\"{\\\"sandbox-id\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandbox-id\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { 'sandbox-id': '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"sandbox-id\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandbox-id\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST", "/sandbox/biometrics/headers/v1.3/api/sandbox",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandbox-id\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandbox-id":"<ADD STRING VALUE>"}'
+  '/sandbox/{sandbox_id}':
+    get:
+      tags:
+        - Sandbox
+      summary: Export Sandbox
+      description: Export Sandbox data specified by sandbox id.
+      operationId: Sandbox_ExportSandbox
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: sandbox_id
+          in: path
+          description: Sandbox Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        '400':
+          description: ''
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json'
+    put:
+      tags:
+        - Sandbox
+      summary: Import Sandbox
+      description: Imports sandbox data specified by sandbox id.
+      operationId: Sandbox_ImportSandbox
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: sandbox_id
+          in: path
+          description: Sandbox Id
+          required: true
+          type: string
+        - name: request
+          in: body
+          description: ''
+          required: true
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        '400':
+          description: ''
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "PUT");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandbox-id\":\"<ADD
+            STRING
+            VALUE>\",\"face-match-response\":[{\"matching-score\":0,\"matching-level\":\"<ADD
+            STRING
+            VALUE>\",\"face-num1\":0,\"face-num2\":0}],\"user-frame-response\":[{\"image\":\"<ADD
+            STRING VALUE>\"}],\"liveness-check-response\":[{\"liveness\":\"<ADD
+            STRING
+            VALUE>\",\"blinked\":false,\"smiled\":false,\"eyebrow-moved\":false}]}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.PUT);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandbox-id\":\"<ADD
+            STRING
+            VALUE>\",\"face-match-response\":[{\"matching-score\":0,\"matching-level\":\"<ADD
+            STRING
+            VALUE>\",\"face-num1\":0,\"face-num2\":0}],\"user-frame-response\":[{\"image\":\"<ADD
+            STRING VALUE>\"}],\"liveness-check-response\":[{\"liveness\":\"<ADD
+            STRING
+            VALUE>\",\"blinked\":false,\"smiled\":false,\"eyebrow-moved\":false}]}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D\"\n\n\tpayload := strings.NewReader(\"{\\\"sandbox-id\\\":\\\"<ADD STRING VALUE>\\\",\\\"face-match-response\\\":[{\\\"matching-score\\\":0,\\\"matching-level\\\":\\\"<ADD STRING VALUE>\\\",\\\"face-num1\\\":0,\\\"face-num2\\\":0}],\\\"user-frame-response\\\":[{\\\"image\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"liveness-check-response\\\":[{\\\"liveness\\\":\\\"<ADD STRING VALUE>\\\",\\\"blinked\\\":false,\\\"smiled\\\":false,\\\"eyebrow-moved\\\":false}]}\")\n\n\treq, _ := http.NewRequest(\"PUT\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandbox-id\":\"<ADD STRING
+            VALUE>\",\"face-match-response\":[{\"matching-score\":0,\"matching-level\":\"<ADD
+            STRING
+            VALUE>\",\"face-num1\":0,\"face-num2\":0}],\"user-frame-response\":[{\"image\":\"<ADD
+            STRING VALUE>\"}],\"liveness-check-response\":[{\"liveness\":\"<ADD
+            STRING
+            VALUE>\",\"blinked\":false,\"smiled\":false,\"eyebrow-moved\":false}]}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D")
+              .put(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'PUT',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { 'sandbox-id': '<ADD STRING VALUE>',
+                 'face-match-response':
+                  [ { 'matching-score': 0,
+                      'matching-level': '<ADD STRING VALUE>',
+                      'face-num1': 0,
+                      'face-num2': 0 } ],
+                 'user-frame-response': [ { image: '<ADD STRING VALUE>' } ],
+                 'liveness-check-response':
+                  [ { liveness: '<ADD STRING VALUE>',
+                      blinked: false,
+                      smiled: false,
+                      'eyebrow-moved': false } ] },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "PUT",
+              CURLOPT_POSTFIELDS => "{\"sandbox-id\":\"<ADD STRING VALUE>\",\"face-match-response\":[{\"matching-score\":0,\"matching-level\":\"<ADD STRING VALUE>\",\"face-num1\":0,\"face-num2\":0}],\"user-frame-response\":[{\"image\":\"<ADD STRING VALUE>\"}],\"liveness-check-response\":[{\"liveness\":\"<ADD STRING VALUE>\",\"blinked\":false,\"smiled\":false,\"eyebrow-moved\":false}]}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandbox-id\":\"<ADD STRING
+            VALUE>\",\"face-match-response\":[{\"matching-score\":0,\"matching-level\":\"<ADD
+            STRING
+            VALUE>\",\"face-num1\":0,\"face-num2\":0}],\"user-frame-response\":[{\"image\":\"<ADD
+            STRING VALUE>\"}],\"liveness-check-response\":[{\"liveness\":\"<ADD
+            STRING
+            VALUE>\",\"blinked\":false,\"smiled\":false,\"eyebrow-moved\":false}]}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("PUT",
+            "/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Put.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandbox-id\":\"<ADD STRING
+            VALUE>\",\"face-match-response\":[{\"matching-score\":0,\"matching-level\":\"<ADD
+            STRING
+            VALUE>\",\"face-num1\":0,\"face-num2\":0}],\"user-frame-response\":[{\"image\":\"<ADD
+            STRING VALUE>\"}],\"liveness-check-response\":[{\"liveness\":\"<ADD
+            STRING
+            VALUE>\",\"blinked\":false,\"smiled\":false,\"eyebrow-moved\":false}]}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request PUT \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandbox-id":"<ADD STRING VALUE>","face-match-response":[{"matching-score":0,"matching-level":"<ADD STRING VALUE>","face-num1":0,"face-num2":0}],"user-frame-response":[{"image":"<ADD STRING VALUE>"}],"liveness-check-response":[{"liveness":"<ADD STRING VALUE>","blinked":false,"smiled":false,"eyebrow-moved":false}]}'
+    delete:
+      tags:
+        - Sandbox
+      summary: Delete Sandbox
+      description: Delete the Sandbox specified by sandbox id.
+      operationId: Sandbox_DeleteSandbox
+      consumes: []
+      produces: []
+      parameters:
+        - name: sandbox_id
+          in: path
+          description: Sandbox Id
+          required: true
+          type: string
+      responses:
+        '204':
+          description: NoContent
+        '400':
+          description: ''
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.DELETE);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"DELETE\", url, nil)\n\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D")
+              .delete(null)
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'DELETE',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D',
+              headers: { 'client-id': 'SOME_APIKEY_VALUE' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "DELETE",
+              CURLOPT_HTTPHEADER => array(
+                "client-id: SOME_APIKEY_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = { 'client-id': "SOME_APIKEY_VALUE" }
+
+
+            conn.request("DELETE",
+            "/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Delete.new(url)
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request DELETE \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/sandbox/%7Bsandbox_id%7D \
+              --header 'client-id: SOME_APIKEY_VALUE'
+  /biometrics/face-match:
+    post:
+      tags:
+        - Biometrics
+      summary: Compare the faces of two images.
+      description: >-
+        The faceMatch endpoint is invoked in order to compare two images and
+        verify if they depict the same person. Also the faceMatch endpoint
+        counts the number of faces in the images so as to allow the caller to
+        handle the results accordingly.
+      operationId: Biometrics_FaceMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/FaceMatchRequest'
+        - name: sandbox_id
+          in: header
+          description: Sandbox Identifier
+          required: true
+          type: string
+          default: MyUniqueSandboxId
+        - name: index
+          in: header
+          description: >-
+            Header 'index' can be used in order to specify/filter the response
+            of the endpoint. In the sandbox data model, the responses of the
+            endpoint are saved. With this header you can choose the element of
+            the list of responses you want to retrieve.
+          required: false
+          type: string
+          default: 0
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FaceMatchResponse'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "index: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"image1\":\"<ADD STRING
+            VALUE>\",\"image2\":\"<ADD STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("index", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"image1\":\"<ADD STRING
+            VALUE>\",\"image2\":\"<ADD STRING VALUE>\"}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match\"\n\n\tpayload := strings.NewReader(\"{\\\"image1\\\":\\\"<ADD STRING VALUE>\\\",\\\"image2\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"index\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType, "{\"image1\":\"<ADD
+            STRING VALUE>\",\"image2\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("index", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 index: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { image1: '<ADD STRING VALUE>', image2: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"image1\":\"<ADD STRING VALUE>\",\"image2\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "index: SOME_STRING_VALUE",
+                "sandbox_id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"image1\":\"<ADD STRING VALUE>\",\"image2\":\"<ADD
+            STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'index': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/biometrics/headers/v1.3/api/biometrics/face-match",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["index"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"image1\":\"<ADD STRING VALUE>\",\"image2\":\"<ADD
+            STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/face-match \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'index: SOME_STRING_VALUE' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --data '{"image1":"<ADD STRING VALUE>","image2":"<ADD STRING VALUE>"}'
+  /biometrics/liveness-check:
+    post:
+      tags:
+        - Biometrics
+      summary: Check the user liveness in a video.
+      description: >-
+        The livenessCheck endpoint is invoked in order to verify if the sent
+        video depicts an alive person and not a simple photo of a person. There
+        are three ways to register liveness. 1. By registering at least one eye
+        blink 2. By registering a transition from neutral to smiling face OR
+        from smiling to neutral face 3. By registering a movement of eyebrows.
+        The depicted person should not be rotated, only one person should be
+        included in the video and there should be at least 10 frames per second.
+      operationId: Biometrics_LivenessCheck
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/LivenessCheckRequest'
+        - name: sandbox_id
+          in: header
+          description: Sandbox Identifier
+          required: true
+          type: string
+          default: MyUniqueSandboxId
+        - name: index
+          in: header
+          description: >-
+            Header 'index' can be used in order to specify/filter the response
+            of the endpoint. In the sandbox data model, the responses of the
+            endpoint are saved. With this header you can choose the element of
+            the list of responses you want to retrieve.
+          required: false
+          type: string
+          default: 0
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/LivenessCheckResponse'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "index: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("index", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check\"\n\n\tpayload := strings.NewReader(\"{}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"index\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody body = RequestBody.create(mediaType, "{}");
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("index", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 index: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: {},
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "index: SOME_STRING_VALUE",
+                "sandbox_id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'index': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["index"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/liveness-check \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'index: SOME_STRING_VALUE' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --data '{}'
+  /biometrics/user-frame:
+    post:
+      tags:
+        - Biometrics
+      summary: Get user frame.
+      description: >-
+        The getUserFrame endpoint is invoked in order to return a specific frame
+        from the customer sent video. The video is analyzed in order to return
+        the first frame where one person is detected.
+      operationId: Biometrics_GetUserFrame
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/GetUserFrameRequest'
+        - name: sandbox_id
+          in: header
+          description: Sandbox Identifier
+          required: true
+          type: string
+          default: MyUniqueSandboxId
+        - name: index
+          in: header
+          description: >-
+            Header 'index' can be used in order to specify/filter the response
+            of the endpoint. In the sandbox data model, the responses of the
+            endpoint are saved. With this header you can choose the element of
+            the list of responses you want to retrieve.
+          required: false
+          type: string
+          default: 0
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GetUserFrameResponse'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "index: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("index", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame\"\n\n\tpayload := strings.NewReader(\"{}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"index\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            MediaType mediaType = MediaType.parse("application/json");
+            RequestBody body = RequestBody.create(mediaType, "{}");
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("index", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 index: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: {},
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "index: SOME_STRING_VALUE",
+                "sandbox_id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'index': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["index"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/biometrics/headers/v1.3/api/biometrics/user-frame \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'index: SOME_STRING_VALUE' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --data '{}'
+definitions:
+  FaceMatchRequest:
+    description: FaceMatch Request Type
+    required:
+      - image1
+      - image2
+    type: object
+    properties:
+      image1:
+        format: byte
+        description: First image (a person is depicted)
+        type: string
+        example: >-
+          /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABpAGkDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAUGBAMHAf/EADUQAAEDAwIEBAIIBwAAAAAAAAABAgMEBRESIQYTFDFBUVNhM3EHIiM0gYKRkhUkMkJSscL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgMBBAUG/8QALREAAgECAwUGBwAAAAAAAAAAAAECAxEEIWEFEhMxgRQVMnGR8DRBUVJjoeH/2gAMAwEAAhEDEQA/APswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOvqnwNa2PZzvHyQn9ZU+s46br8SP5KRbhXrQdPikqKnnzNi+wZq0Z/ud5InmeU2hXrPFShGTy10N6lGO4m0UesqfWcOsqfWcReJL43hyxz3R8CzthVqctrtKrlyN749yjDIksLJETGtqOx5ZTJo8WuoqW87eZZaN7WOnrKn1nDrKn1nHjnfHio7JnwI9orfe/Vmd2P0PbrKn1nDrKn1nELiG/ssEFJK6nWfqqllOiI/Tp1ePYrknVrqKk5Oz1MWje1inQVckr1ikXVtlFO8kW373+VSuen2XUnUw95u+Zp1klPIAA6RSAAATLr8SP5KYH6QZ5oI7JyZpItdzja7Q5Uym+y48DfXX4kfyUhXSzUN4SnStidIlNMk0eHq3D07Lt3PJYqcYY6Upcv4b0E3SsjH8eVt1qeDrxHX2lKKGN8fJl6hsnN+1TwTttuc09vZw1euGK63XCqmmucrYalssyvSoY5Ey7Htn/Rsr1DaLrQ1FtuT0fD9VZY2uVFTCo5O2/kcNo4a4Yt9zjrbbSfzCszG7L3tjRU8M7Nzv5EaeIjGlutNc8ksndJfN9Q4Ny5mN4gWK7Ul5vlspKvFHM5EuMlwcxWPaqbRsTw7YTbuU4qV3EfHslLX1VT0rrTDNJBFKrGvcunuieGVyWarhLhN89bLLROVZlXnI1ZFZqcuFVqJtq38N0yUKSislJdVuNO7FStK2Hma3K1Y2oionlnGlfPC5JyxMVC0E+Ttpy1008jCg75nzaaeobwsyma59R0PEfJp2yPyulN0blfdTYcATPun8Qu1dVyyXJ87opqZyqjaVEXZiN/Dv7fMoN4c4ce7oWxuVz6rr9PMfvLlUzn5tXb2Uow2G3U98mvMMTo6ydmiVzXqjXp7t7Z2TcjXxNOcHFJpv3+zMYNO5ctv3v8AKpXJFt+9/lUrnY2R8N1ZRX8YAB1igAAA4blA+RGvYiu07KiE3lSem79qmgBycTsuFeo6m9a5fCs4q1jKy2ennkfJJTOV8mdTvrJnZqf8N/T3EVoghkjkjp5GrGmG7ux4p2/FTVAp7nytxH76kuPoZSSzU8sj3yUrn8z+prsq1d0Xt27oh+rZ4V1ZhlVHN0qiud/ijc9++ERM99jVAdz/AJH76jj6GYhtscEnMjp3a9CM1qiquEVV7r7uX9T35Unpu/apoARexYvnN+g7RoTbbTyNlWVzVamMJnxKQB1cNh44enuRdymc3N3YABskAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Q==
+      image2:
+        format: byte
+        description: Second image (a person is depicted)
+        type: string
+        example: >-
+          /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABpAGkDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAUGBAMHAf/EADUQAAEDAwIEBAIIBwAAAAAAAAABAgMEBRESIQYTFDFBUVNhM3EHIiM0gYKRkhUkMkJSscL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgMBBAUG/8QALREAAgECAwUGBwAAAAAAAAAAAAECAxEEIWEFEhMxgRQVMnGR8DRBUVJjoeH/2gAMAwEAAhEDEQA/APswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOvqnwNa2PZzvHyQn9ZU+s46br8SP5KRbhXrQdPikqKnnzNi+wZq0Z/ud5InmeU2hXrPFShGTy10N6lGO4m0UesqfWcOsqfWcReJL43hyxz3R8CzthVqctrtKrlyN749yjDIksLJETGtqOx5ZTJo8WuoqW87eZZaN7WOnrKn1nDrKn1nHjnfHio7JnwI9orfe/Vmd2P0PbrKn1nDrKn1nELiG/ssEFJK6nWfqqllOiI/Tp1ePYrknVrqKk5Oz1MWje1inQVckr1ikXVtlFO8kW373+VSuen2XUnUw95u+Zp1klPIAA6RSAAATLr8SP5KYH6QZ5oI7JyZpItdzja7Q5Uym+y48DfXX4kfyUhXSzUN4SnStidIlNMk0eHq3D07Lt3PJYqcYY6Upcv4b0E3SsjH8eVt1qeDrxHX2lKKGN8fJl6hsnN+1TwTttuc09vZw1euGK63XCqmmucrYalssyvSoY5Ey7Htn/Rsr1DaLrQ1FtuT0fD9VZY2uVFTCo5O2/kcNo4a4Yt9zjrbbSfzCszG7L3tjRU8M7Nzv5EaeIjGlutNc8ksndJfN9Q4Ny5mN4gWK7Ul5vlspKvFHM5EuMlwcxWPaqbRsTw7YTbuU4qV3EfHslLX1VT0rrTDNJBFKrGvcunuieGVyWarhLhN89bLLROVZlXnI1ZFZqcuFVqJtq38N0yUKSislJdVuNO7FStK2Hma3K1Y2oionlnGlfPC5JyxMVC0E+Ttpy1008jCg75nzaaeobwsyma59R0PEfJp2yPyulN0blfdTYcATPun8Qu1dVyyXJ87opqZyqjaVEXZiN/Dv7fMoN4c4ce7oWxuVz6rr9PMfvLlUzn5tXb2Uow2G3U98mvMMTo6ydmiVzXqjXp7t7Z2TcjXxNOcHFJpv3+zMYNO5ctv3v8AKpXJFt+9/lUrnY2R8N1ZRX8YAB1igAAA4blA+RGvYiu07KiE3lSem79qmgBycTsuFeo6m9a5fCs4q1jKy2ennkfJJTOV8mdTvrJnZqf8N/T3EVoghkjkjp5GrGmG7ux4p2/FTVAp7nytxH76kuPoZSSzU8sj3yUrn8z+prsq1d0Xt27oh+rZ4V1ZhlVHN0qiud/ijc9++ERM99jVAdz/AJH76jj6GYhtscEnMjp3a9CM1qiquEVV7r7uX9T35Unpu/apoARexYvnN+g7RoTbbTyNlWVzVamMJnxKQB1cNh44enuRdymc3N3YABskAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Q==
+  FaceMatchResponse:
+    description: FaceMatch Response Type
+    required:
+      - matching-score
+      - matching-level
+      - face-num1
+      - face-num2
+    type: object
+    properties:
+      matching-score:
+        description: >-
+          Face resemblance score [0-100]. 0 equals to absolute non-match while
+          100 indicates that the faces are absolutely identical.
+        type: integer
+        example: 80
+      matching-level:
+        description: >-
+          The Mathching level of the faces. Possible values [no-match,
+          low-match, medium-match, high-match]
+        type: string
+        example: high-match
+      face-num1:
+        description: The number of faces detected in the first image.
+        type: integer
+        example: 1
+      face-num2:
+        description: The number of faces detected in the second image.
+        type: integer
+        example: 1
+  LivenessCheckRequest:
+    description: Liveness Check Request Type
+    required:
+      - frames
+    type: object
+    properties:
+      frames:
+        description: 'User video, the video is described through a list of frames.'
+        items:
+          format: byte
+          type: string
+        example:
+          - >-
+            /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABpAGkDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAUGBAMHAf/EADUQAAEDAwIEBAIIBwAAAAAAAAABAgMEBRESIQYTFDFBUVNhM3EHIiM0gYKRkhUkMkJSscL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgMBBAUG/8QALREAAgECAwUGBwAAAAAAAAAAAAECAxEEIWEFEhMxgRQVMnGR8DRBUVJjoeH/2gAMAwEAAhEDEQA/APswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOvqnwNa2PZzvHyQn9ZU+s46br8SP5KRbhXrQdPikqKnnzNi+wZq0Z/ud5InmeU2hXrPFShGTy10N6lGO4m0UesqfWcOsqfWcReJL43hyxz3R8CzthVqctrtKrlyN749yjDIksLJETGtqOx5ZTJo8WuoqW87eZZaN7WOnrKn1nDrKn1nHjnfHio7JnwI9orfe/Vmd2P0PbrKn1nDrKn1nELiG/ssEFJK6nWfqqllOiI/Tp1ePYrknVrqKk5Oz1MWje1inQVckr1ikXVtlFO8kW373+VSuen2XUnUw95u+Zp1klPIAA6RSAAATLr8SP5KYH6QZ5oI7JyZpItdzja7Q5Uym+y48DfXX4kfyUhXSzUN4SnStidIlNMk0eHq3D07Lt3PJYqcYY6Upcv4b0E3SsjH8eVt1qeDrxHX2lKKGN8fJl6hsnN+1TwTttuc09vZw1euGK63XCqmmucrYalssyvSoY5Ey7Htn/Rsr1DaLrQ1FtuT0fD9VZY2uVFTCo5O2/kcNo4a4Yt9zjrbbSfzCszG7L3tjRU8M7Nzv5EaeIjGlutNc8ksndJfN9Q4Ny5mN4gWK7Ul5vlspKvFHM5EuMlwcxWPaqbRsTw7YTbuU4qV3EfHslLX1VT0rrTDNJBFKrGvcunuieGVyWarhLhN89bLLROVZlXnI1ZFZqcuFVqJtq38N0yUKSislJdVuNO7FStK2Hma3K1Y2oionlnGlfPC5JyxMVC0E+Ttpy1008jCg75nzaaeobwsyma59R0PEfJp2yPyulN0blfdTYcATPun8Qu1dVyyXJ87opqZyqjaVEXZiN/Dv7fMoN4c4ce7oWxuVz6rr9PMfvLlUzn5tXb2Uow2G3U98mvMMTo6ydmiVzXqjXp7t7Z2TcjXxNOcHFJpv3+zMYNO5ctv3v8AKpXJFt+9/lUrnY2R8N1ZRX8YAB1igAAA4blA+RGvYiu07KiE3lSem79qmgBycTsuFeo6m9a5fCs4q1jKy2ennkfJJTOV8mdTvrJnZqf8N/T3EVoghkjkjp5GrGmG7ux4p2/FTVAp7nytxH76kuPoZSSzU8sj3yUrn8z+prsq1d0Xt27oh+rZ4V1ZhlVHN0qiud/ijc9++ERM99jVAdz/AJH76jj6GYhtscEnMjp3a9CM1qiquEVV7r7uX9T35Unpu/apoARexYvnN+g7RoTbbTyNlWVzVamMJnxKQB1cNh44enuRdymc3N3YABskAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Q==
+  GetUserFrameRequest:
+    description: Get User Frame Request Type
+    required:
+      - frames
+    type: object
+    properties:
+      frames:
+        description: >-
+          User video, the video is described through an time-ordered list of
+          frames.
+        items:
+          format: byte
+          type: string
+        example:
+          - >-
+            /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABpAGkDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAUGBAMHAf/EADUQAAEDAwIEBAIIBwAAAAAAAAABAgMEBRESIQYTFDFBUVNhM3EHIiM0gYKRkhUkMkJSscL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgMBBAUG/8QALREAAgECAwUGBwAAAAAAAAAAAAECAxEEIWEFEhMxgRQVMnGR8DRBUVJjoeH/2gAMAwEAAhEDEQA/APswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOvqnwNa2PZzvHyQn9ZU+s46br8SP5KRbhXrQdPikqKnnzNi+wZq0Z/ud5InmeU2hXrPFShGTy10N6lGO4m0UesqfWcOsqfWcReJL43hyxz3R8CzthVqctrtKrlyN749yjDIksLJETGtqOx5ZTJo8WuoqW87eZZaN7WOnrKn1nDrKn1nHjnfHio7JnwI9orfe/Vmd2P0PbrKn1nDrKn1nELiG/ssEFJK6nWfqqllOiI/Tp1ePYrknVrqKk5Oz1MWje1inQVckr1ikXVtlFO8kW373+VSuen2XUnUw95u+Zp1klPIAA6RSAAATLr8SP5KYH6QZ5oI7JyZpItdzja7Q5Uym+y48DfXX4kfyUhXSzUN4SnStidIlNMk0eHq3D07Lt3PJYqcYY6Upcv4b0E3SsjH8eVt1qeDrxHX2lKKGN8fJl6hsnN+1TwTttuc09vZw1euGK63XCqmmucrYalssyvSoY5Ey7Htn/Rsr1DaLrQ1FtuT0fD9VZY2uVFTCo5O2/kcNo4a4Yt9zjrbbSfzCszG7L3tjRU8M7Nzv5EaeIjGlutNc8ksndJfN9Q4Ny5mN4gWK7Ul5vlspKvFHM5EuMlwcxWPaqbRsTw7YTbuU4qV3EfHslLX1VT0rrTDNJBFKrGvcunuieGVyWarhLhN89bLLROVZlXnI1ZFZqcuFVqJtq38N0yUKSislJdVuNO7FStK2Hma3K1Y2oionlnGlfPC5JyxMVC0E+Ttpy1008jCg75nzaaeobwsyma59R0PEfJp2yPyulN0blfdTYcATPun8Qu1dVyyXJ87opqZyqjaVEXZiN/Dv7fMoN4c4ce7oWxuVz6rr9PMfvLlUzn5tXb2Uow2G3U98mvMMTo6ydmiVzXqjXp7t7Z2TcjXxNOcHFJpv3+zMYNO5ctv3v8AKpXJFt+9/lUrnY2R8N1ZRX8YAB1igAAA4blA+RGvYiu07KiE3lSem79qmgBycTsuFeo6m9a5fCs4q1jKy2ennkfJJTOV8mdTvrJnZqf8N/T3EVoghkjkjp5GrGmG7ux4p2/FTVAp7nytxH76kuPoZSSzU8sj3yUrn8z+prsq1d0Xt27oh+rZ4V1ZhlVHN0qiud/ijc9++ERM99jVAdz/AJH76jj6GYhtscEnMjp3a9CM1qiquEVV7r7uX9T35Unpu/apoARexYvnN+g7RoTbbTyNlWVzVamMJnxKQB1cNh44enuRdymc3N3YABskAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Q==
+  GetUserFrameResponse:
+    description: Get User Frame Response Type
+    required:
+      - image
+    type: object
+    properties:
+      image:
+        format: byte
+        description: >-
+          The video is analyzed in order to return a frame where one person is
+          detected.
+        type: string
+        example: >-
+          /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABpAGkDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAUGBAMHAf/EADUQAAEDAwIEBAIIBwAAAAAAAAABAgMEBRESIQYTFDFBUVNhM3EHIiM0gYKRkhUkMkJSscL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgMBBAUG/8QALREAAgECAwUGBwAAAAAAAAAAAAECAxEEIWEFEhMxgRQVMnGR8DRBUVJjoeH/2gAMAwEAAhEDEQA/APswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOvqnwNa2PZzvHyQn9ZU+s46br8SP5KRbhXrQdPikqKnnzNi+wZq0Z/ud5InmeU2hXrPFShGTy10N6lGO4m0UesqfWcOsqfWcReJL43hyxz3R8CzthVqctrtKrlyN749yjDIksLJETGtqOx5ZTJo8WuoqW87eZZaN7WOnrKn1nDrKn1nHjnfHio7JnwI9orfe/Vmd2P0PbrKn1nDrKn1nELiG/ssEFJK6nWfqqllOiI/Tp1ePYrknVrqKk5Oz1MWje1inQVckr1ikXVtlFO8kW373+VSuen2XUnUw95u+Zp1klPIAA6RSAAATLr8SP5KYH6QZ5oI7JyZpItdzja7Q5Uym+y48DfXX4kfyUhXSzUN4SnStidIlNMk0eHq3D07Lt3PJYqcYY6Upcv4b0E3SsjH8eVt1qeDrxHX2lKKGN8fJl6hsnN+1TwTttuc09vZw1euGK63XCqmmucrYalssyvSoY5Ey7Htn/Rsr1DaLrQ1FtuT0fD9VZY2uVFTCo5O2/kcNo4a4Yt9zjrbbSfzCszG7L3tjRU8M7Nzv5EaeIjGlutNc8ksndJfN9Q4Ny5mN4gWK7Ul5vlspKvFHM5EuMlwcxWPaqbRsTw7YTbuU4qV3EfHslLX1VT0rrTDNJBFKrGvcunuieGVyWarhLhN89bLLROVZlXnI1ZFZqcuFVqJtq38N0yUKSislJdVuNO7FStK2Hma3K1Y2oionlnGlfPC5JyxMVC0E+Ttpy1008jCg75nzaaeobwsyma59R0PEfJp2yPyulN0blfdTYcATPun8Qu1dVyyXJ87opqZyqjaVEXZiN/Dv7fMoN4c4ce7oWxuVz6rr9PMfvLlUzn5tXb2Uow2G3U98mvMMTo6ydmiVzXqjXp7t7Z2TcjXxNOcHFJpv3+zMYNO5ctv3v8AKpXJFt+9/lUrnY2R8N1ZRX8YAB1igAAA4blA+RGvYiu07KiE3lSem79qmgBycTsuFeo6m9a5fCs4q1jKy2ennkfJJTOV8mdTvrJnZqf8N/T3EVoghkjkjp5GrGmG7ux4p2/FTVAp7nytxH76kuPoZSSzU8sj3yUrn8z+prsq1d0Xt27oh+rZ4V1ZhlVHN0qiud/ijc9++ERM99jVAdz/AJH76jj6GYhtscEnMjp3a9CM1qiquEVV7r7uX9T35Unpu/apoARexYvnN+g7RoTbbTyNlWVzVamMJnxKQB1cNh44enuRdymc3N3YABskAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Q==
+  SandboxRequest:
+    description: Sandbox Request
+    required:
+      - sandbox-id
+    type: object
+    properties:
+      sandbox-id:
+        description: Sandbox unique identifier. E.g MySandbox
+        type: string
+        example: MyUniqueSandboxId
+  SandboxDataModel:
+    description: Sandbox Data Model
+    type: object
+    properties:
+      sandbox-id:
+        description: Sandbox unique identifier. E.g MySandbox
+        type: string
+        example: MyUniqueSandboxId
+      face-match-response:
+        description: Sandbox List of FaceMatch Endpoint Responses.
+        type: array
+        items:
+          description: FaceMatch Response Type
+          required:
+            - matching-score
+            - matching-level
+            - face-num1
+            - face-num2
+          type: object
+          properties:
+            matching-score:
+              description: >-
+                Face resemblance score [0-100]. 0 equals to absolute non-match
+                while 100 indicates that the faces are absolutely identical.
+              type: integer
+              example: 80
+            matching-level:
+              description: >-
+                The Mathching level of the faces. Possible values [no-match,
+                low-match, medium-match, high-match]
+              type: string
+              example: high-match
+            face-num1:
+              description: The number of faces detected in the first image.
+              type: integer
+              example: 1
+            face-num2:
+              description: The number of faces detected in the second image.
+              type: integer
+              example: 1
+      user-frame-response:
+        description: Sandbox List of GetUserFrame Endpoint Responses.
+        type: array
+        items:
+          description: Get User Frame Response Type
+          required:
+            - image
+          type: object
+          properties:
+            image:
+              format: byte
+              description: >-
+                The video is analyzed in order to return a frame where one
+                person is detected.
+              type: string
+              example: >-
+                /9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCABpAGkDASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAUGBAMHAf/EADUQAAEDAwIEBAIIBwAAAAAAAAABAgMEBRESIQYTFDFBUVNhM3EHIiM0gYKRkhUkMkJSscL/xAAaAQEAAgMBAAAAAAAAAAAAAAAAAgMBBAUG/8QALREAAgECAwUGBwAAAAAAAAAAAAECAxEEIWEFEhMxgRQVMnGR8DRBUVJjoeH/2gAMAwEAAhEDEQA/APswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOvqnwNa2PZzvHyQn9ZU+s46br8SP5KRbhXrQdPikqKnnzNi+wZq0Z/ud5InmeU2hXrPFShGTy10N6lGO4m0UesqfWcOsqfWcReJL43hyxz3R8CzthVqctrtKrlyN749yjDIksLJETGtqOx5ZTJo8WuoqW87eZZaN7WOnrKn1nDrKn1nHjnfHio7JnwI9orfe/Vmd2P0PbrKn1nDrKn1nELiG/ssEFJK6nWfqqllOiI/Tp1ePYrknVrqKk5Oz1MWje1inQVckr1ikXVtlFO8kW373+VSuen2XUnUw95u+Zp1klPIAA6RSAAATLr8SP5KYH6QZ5oI7JyZpItdzja7Q5Uym+y48DfXX4kfyUhXSzUN4SnStidIlNMk0eHq3D07Lt3PJYqcYY6Upcv4b0E3SsjH8eVt1qeDrxHX2lKKGN8fJl6hsnN+1TwTttuc09vZw1euGK63XCqmmucrYalssyvSoY5Ey7Htn/Rsr1DaLrQ1FtuT0fD9VZY2uVFTCo5O2/kcNo4a4Yt9zjrbbSfzCszG7L3tjRU8M7Nzv5EaeIjGlutNc8ksndJfN9Q4Ny5mN4gWK7Ul5vlspKvFHM5EuMlwcxWPaqbRsTw7YTbuU4qV3EfHslLX1VT0rrTDNJBFKrGvcunuieGVyWarhLhN89bLLROVZlXnI1ZFZqcuFVqJtq38N0yUKSislJdVuNO7FStK2Hma3K1Y2oionlnGlfPC5JyxMVC0E+Ttpy1008jCg75nzaaeobwsyma59R0PEfJp2yPyulN0blfdTYcATPun8Qu1dVyyXJ87opqZyqjaVEXZiN/Dv7fMoN4c4ce7oWxuVz6rr9PMfvLlUzn5tXb2Uow2G3U98mvMMTo6ydmiVzXqjXp7t7Z2TcjXxNOcHFJpv3+zMYNO5ctv3v8AKpXJFt+9/lUrnY2R8N1ZRX8YAB1igAAA4blA+RGvYiu07KiE3lSem79qmgBycTsuFeo6m9a5fCs4q1jKy2ennkfJJTOV8mdTvrJnZqf8N/T3EVoghkjkjp5GrGmG7ux4p2/FTVAp7nytxH76kuPoZSSzU8sj3yUrn8z+prsq1d0Xt27oh+rZ4V1ZhlVHN0qiud/ijc9++ERM99jVAdz/AJH76jj6GYhtscEnMjp3a9CM1qiquEVV7r7uX9T35Unpu/apoARexYvnN+g7RoTbbTyNlWVzVamMJnxKQB1cNh44enuRdymc3N3YABskAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/2Q==
+      liveness-check-response:
+        description: Sandbox List of LivenessCheck Endpoint Responses.
+        type: array
+        items:
+          description: Liveness Check Response Type
+          required:
+            - liveness
+          type: object
+          properties:
+            liveness:
+              description: >-
+                Whether the user in the video is a live human. Possible values
+                [passed, failed, cannot-determine]
+              type: string
+              example: passed
+            blinked:
+              description: >-
+                Whether the user in the video blinked her eyes. Will be null if
+                the detection cannot determine the result.
+              type: boolean
+              example: true
+            smiled:
+              description: >-
+                Whether the user in the video smiled. Will be null if the
+                detection cannot determine the result.
+              type: boolean
+              example: true
+            eyebrow-moved:
+              description: >-
+                Whether the user in the video moved his/her eyebrow. Will be
+                null if the detection cannot determine the result.
+              type: boolean
+              example: true
+  LivenessCheckResponse:
+    description: Liveness Check Response Type
+    required:
+      - liveness
+    type: object
+    properties:
+      liveness:
+        description: >-
+          Whether the user in the video is a live human. Possible values
+          [passed, failed, cannot-determine]
+        type: string
+        example: passed
+      blinked:
+        description: >-
+          Whether the user in the video blinked her eyes. Will be null if the
+          detection cannot determine the result.
+        type: boolean
+        example: true
+      smiled:
+        description: >-
+          Whether the user in the video smiled. Will be null if the detection
+          cannot determine the result.
+        type: boolean
+        example: true
+      eyebrow-moved:
+        description: >-
+          Whether the user in the video moved his/her eyebrow. Will be null if
+          the detection cannot determine the result.
+        type: boolean
+        example: true
+securityDefinitions:
+  Client-Id:
+    type: apiKey
+    description: Applications' Id
+    name: Client-Id
+    in: header
+security:
+  - Client-Id: []

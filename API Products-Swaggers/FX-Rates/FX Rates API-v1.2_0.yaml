@@ -1,0 +1,2423 @@
+swagger: '2.0'
+info:
+  title: FX Rates API
+  version: v1.2
+  description: >
+    ## Functionality at a glance
+
+
+    Start integrating your application with NBG Bank and enable your customers
+    to:
+
+
+    **1.** Find the exchange rates for a pair of currencies
+
+
+    **2.** Find the exchange rates for all available currencies
+
+
+    ## Quick Getting Started
+
+
+    1. Login/Register to the NBG Technology HUB
+
+    2. Go to **"APPS"**
+    
+    3. Select your Organization and go to step 4. If you want to create a new Organization click **\"CREATE AN ORGANIZATION\"** and follow the steps below:
+        1. Enter the title of your Organization
+        2. Enter a short description of your Organization (optional)
+        3. Click **"SUBMIT"**
+
+    4. Select the Organization of choice and click **"ADD AN APPLICATION"** 
+          1. Fill in the forms (title and short description)
+          2. Check **\"Authorization Code\" and \"Client Credentials\"** 
+          3. Enter the **OAuth Redirect and Post Logout URIs** (these are the URIs that we will redirect the user upon logging in and logging out respectively)
+              
+              You can use the following redirect URL to easily test the API through the portal: *https://developer.nbg.gr/oauth2/redoc-callback*
+          4. Click **"SUBMIT"**
+          5. Store the APPs **"Client ID"** and **"Client Secret"**
+          
+    5. Go to **"API PRODUCTS"** and select the **FX Rates API**
+
+    6. Click **\"START USING THIS API\"**, choose your app and click
+    **"SUBSCRIBE"**
+
+    7. Create a Sandbox
+
+    8. Play with the API
+
+
+    ## Create your Sandbox
+
+    Sandboxes are self - contained testing environments that provide a simple
+    way of testing the API without any real impact, meaning that no personal or
+    financial data is used.
+
+    You can create **your Sandbox** by invoking the **POST** /api/sandbox call.
+    This call will generate a new Sandbox with a **unique sandbox_id**.
+
+    Important! Don't lose your sandbox_id, since you will need it for all the
+    API calls. Sandbox endpoints are not included in the production version API.
+
+
+    When you create a sandbox, users and sandbox specific data are generated as
+    sample data.
+
+
+    The following HTTP header parameters are required for every call (except for
+    sandbox operations) and can be obtained at sandbox creation:
+
+
+    1. sandbox_id = the name of the sandbox you created
+
+    2. application_id = the client id of your app
+
+    3. username = The user name of your sanbox test user
+
+    4. provider_id = The user-id issued by the provider (NBG.gr)
+
+    5. provider = The provider name (NBG)
+
+
+    Get to know the Sandbox Operations in the related section. 
+
+
+    ## Start Testing
+
+    Once you have your sandbox_id, you can start invoking the rest of the
+    operations by providing all the mandatory information in the http header. 
+
+
+    ## Important notes
+
+    Request headers
+
+    Each request MUST have the following info:
+
+
+    *sandbox_id*, *application_id*, *username*, *provider_id*, *provider*
+
+
+    ## Error Codes
+
+    * FXR-20003: fromCCY value not supported
+
+    * FXR-30001: Fx Rate not found
+
+    * FXR-30002: toCCY value not found
+
+
+
+    ## Feedback and Questions
+
+    We would love to hear your feedback and answer your questions. Send us at
+    [developer@nbg.gr](developer@nbg.gr)
+
+
+    Check out our [Sandbox Postman
+    Collection](https://github.com/myNBGcode/PostmanCollections/tree/master/FX%20Rates%20API)!
+
+
+    ------------------------------------------------------------------------------------------ 
+
+
+    Created by [**NBG**](https://www.nbg.gr/).
+
+
+    ------------------------------------------------------------------------------------------ 
+
+    ------------------------------------------------------------------------------------------
+
+
+
+
+     # Entities 
+
+     Below, the main entities are documented.
+     <a name=FxRates></a> 
+    ## FxRates 
+
+    Two Currencies FX Rates 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | currencyCode| Currency code| string|
+
+    | currencySymbol| Currency symbol| string|
+
+    | exchangeBuy| ΕΝΑΛΛΑΚΤΙΚΑ ΔΙΚΤΥΑ - ΑΓΟΡΑ| string|
+
+    | exchangeSell| ΕΝΑΛΛΑΚΤΙΚΑ ΔΙΚΤΥΑ - ΠΩΛΗΣΗ| string|
+
+    | banknotesBuy| ΞΕΝΑ ΤΡΑΠΕΖΟΓΡΑΜΜΑΤΙΑ - ΑΓΟΡΑ| string|
+
+    | banknotesSell| ΞΕΝΑ ΤΡΑΠΕΖΟΓΡΑΜΜΑΤΙΑ - ΠΩΛΗΣΗ| string|
+
+     <a name=Currency></a> 
+    ## Currency 
+
+    Currency properties 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | currencyCode| Currency code| string|
+
+    | currencySymbol| Currency symbol| string|
+
+     <a name=ApiError></a> 
+    ## ApiError 
+
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | error| -| string|
+
+     <a name=SandboxRequest></a> 
+    ## SandboxRequest 
+
+    Sandbox Request 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | sandboxId| Sandbox unique identifier. E.g MySandbox| string|
+
+     <a name=SandboxDataModel></a> 
+    ## SandboxDataModel 
+
+    Sandbox Data Model 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | sandboxId| Sandbox unique identifier. E.g MySandbox| string|
+
+    | users| Sandbox users.| array|
+
+    | fxRates| Sandbox Fx Rates.| array|
+
+    | currencies| Sandbox Currencies.| array|
+
+     <a name=SandboxUser></a> 
+    ## SandboxUser 
+
+    Sandbox User 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | Username| Sandbox username| string|
+
+    | ProviderId| Sandbox provider identifier (e.g NBG.gr)| string|
+
+    | Provider| Sandbox provider (e.g NBG)| string|
+
+     <a name=SandboxFxRates></a> 
+    ## SandboxFxRates 
+
+    Sandbox Fx Rates 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | DELT_LEKT| DELT_LEKT| string|
+
+    | DELT_ECBREF| DELT_ECBREF| string|
+
+    | DELT_TAS| DELT_TAS| string|
+
+    | DELT_TPS| DELT_TPS| string|
+
+    | DELT_NOM| DELT_NOM| string|
+
+    | DELT_TAXT| DELT_TAXT| string|
+
+    | DELT_ETEREF| DELT_ETEREF| string|
+
+    | DELT_TPXT| DELT_TPXT| string|
+
+     <a name=SandboxCurrency></a> 
+    ## SandboxCurrency 
+
+    Sandbox Currency 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | DELT_LEKT| DELT_LEKT| string|
+
+    | DELT_NOM| DELT_NOM| string|
+
+     <a name=CreateUserRequest></a> 
+    ## CreateUserRequest 
+
+    Create user for sandbox 
+
+
+    ### Attributes 
+
+
+    | Name| Description| Values|
+
+    | -----| -----| -----|
+
+    | username| User unique username| string|
+  contact: {}
+host: apis.nbg.gr
+basePath: /sandbox/fxrates/headers/v1.2
+schemes:
+  - https
+paths:
+  /currencies/all:
+    get:
+      consumes: []
+      produces:
+        - application/json
+      tags:
+        - Currencies
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: application_id
+          description: Application ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: user_id
+          description: User ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: username
+          description: User Name
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: provider_id
+          description: Provider ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: provider
+          description: Provider Name
+          in: header
+          required: true
+          type: string
+          default: ''
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Currency'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ApiError'
+      operationId: Currencies_Names
+      summary: Supported Currencies
+      description: Returns an array of the supported currencies.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "provider: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "provider_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "username: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "user_id: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "application_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("provider", "SOME_STRING_VALUE");
+
+            request.AddHeader("provider_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("username", "SOME_STRING_VALUE");
+
+            request.AddHeader("user_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("application_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"application_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"user_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"username\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"provider_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"provider\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("application_id", "SOME_STRING_VALUE")
+              .addHeader("user_id", "SOME_STRING_VALUE")
+              .addHeader("username", "SOME_STRING_VALUE")
+              .addHeader("provider_id", "SOME_STRING_VALUE")
+              .addHeader("provider", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 provider: 'SOME_STRING_VALUE',
+                 provider_id: 'SOME_STRING_VALUE',
+                 username: 'SOME_STRING_VALUE',
+                 user_id: 'SOME_STRING_VALUE',
+                 application_id: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "application_id: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "provider: SOME_STRING_VALUE",
+                "provider_id: SOME_STRING_VALUE",
+                "sandbox_id: SOME_STRING_VALUE",
+                "user_id: SOME_STRING_VALUE",
+                "username: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'application_id': "SOME_STRING_VALUE",
+                'user_id': "SOME_STRING_VALUE",
+                'username': "SOME_STRING_VALUE",
+                'provider_id': "SOME_STRING_VALUE",
+                'provider': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET", "/sandbox/fxrates/headers/v1.2/currencies/all",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["application_id"] = 'SOME_STRING_VALUE'
+
+            request["user_id"] = 'SOME_STRING_VALUE'
+
+            request["username"] = 'SOME_STRING_VALUE'
+
+            request["provider_id"] = 'SOME_STRING_VALUE'
+
+            request["provider"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/currencies/all \
+              --header 'application_id: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'provider: SOME_STRING_VALUE' \
+              --header 'provider_id: SOME_STRING_VALUE' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --header 'user_id: SOME_STRING_VALUE' \
+              --header 'username: SOME_STRING_VALUE'
+  '/fx/{fromCurrency}/{toCurrency}':
+    get:
+      consumes: []
+      produces:
+        - application/json
+      tags:
+        - Rates
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: application_id
+          description: Application ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: user_id
+          description: User ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: username
+          description: User Name
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: provider_id
+          description: Provider ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: provider
+          description: Provider Name
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: fromCurrency
+          description: from currency symbol (3 chars)
+          in: path
+          required: true
+          type: string
+        - name: toCurrency
+          description: to currency symbol (3 chars)
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/FxRates'
+        '400':
+          description: 'FXR-20003: fromCurrency value not supported.'
+          schema:
+            $ref: '#/definitions/ApiError'
+        '404':
+          description: "- FXR-30001: Fx Rate not found.\r\n- FXR-30002: toCurrency value not found."
+          schema:
+            $ref: '#/definitions/ApiError'
+      operationId: FX_2CCYs
+      summary: FX Rates of 2 currencies
+      description: Returns the NBG fx Rates of a specific couple of currencies.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "provider: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "provider_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "username: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "user_id: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "application_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("provider", "SOME_STRING_VALUE");
+
+            request.AddHeader("provider_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("username", "SOME_STRING_VALUE");
+
+            request.AddHeader("user_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("application_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"application_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"user_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"username\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"provider_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"provider\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("application_id", "SOME_STRING_VALUE")
+              .addHeader("user_id", "SOME_STRING_VALUE")
+              .addHeader("username", "SOME_STRING_VALUE")
+              .addHeader("provider_id", "SOME_STRING_VALUE")
+              .addHeader("provider", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 provider: 'SOME_STRING_VALUE',
+                 provider_id: 'SOME_STRING_VALUE',
+                 username: 'SOME_STRING_VALUE',
+                 user_id: 'SOME_STRING_VALUE',
+                 application_id: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "application_id: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "provider: SOME_STRING_VALUE",
+                "provider_id: SOME_STRING_VALUE",
+                "sandbox_id: SOME_STRING_VALUE",
+                "user_id: SOME_STRING_VALUE",
+                "username: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'application_id': "SOME_STRING_VALUE",
+                'user_id': "SOME_STRING_VALUE",
+                'username': "SOME_STRING_VALUE",
+                'provider_id': "SOME_STRING_VALUE",
+                'provider': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["application_id"] = 'SOME_STRING_VALUE'
+
+            request["user_id"] = 'SOME_STRING_VALUE'
+
+            request["username"] = 'SOME_STRING_VALUE'
+
+            request["provider_id"] = 'SOME_STRING_VALUE'
+
+            request["provider"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/%7BfromCurrency%7D/%7BtoCurrency%7D \
+              --header 'application_id: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'provider: SOME_STRING_VALUE' \
+              --header 'provider_id: SOME_STRING_VALUE' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --header 'user_id: SOME_STRING_VALUE' \
+              --header 'username: SOME_STRING_VALUE'
+  /fx/all:
+    get:
+      consumes: []
+      produces:
+        - application/json
+      tags:
+        - Rates
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: application_id
+          description: Application ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: user_id
+          description: User ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: username
+          description: User Name
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: provider_id
+          description: Provider ID
+          in: header
+          required: true
+          type: string
+          default: ''
+        - name: provider
+          description: Provider Name
+          in: header
+          required: true
+          type: string
+          default: ''
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/FxRates'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ApiError'
+      operationId: FX_AllCCYs
+      summary: FX Rates of all currencies
+      description: Returns the NBG fx Rates of all currencies.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "provider: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "provider_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "username: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "user_id: SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "application_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("provider", "SOME_STRING_VALUE");
+
+            request.AddHeader("provider_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("username", "SOME_STRING_VALUE");
+
+            request.AddHeader("user_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("application_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"application_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"user_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"username\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"provider_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"provider\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("application_id", "SOME_STRING_VALUE")
+              .addHeader("user_id", "SOME_STRING_VALUE")
+              .addHeader("username", "SOME_STRING_VALUE")
+              .addHeader("provider_id", "SOME_STRING_VALUE")
+              .addHeader("provider", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url: 'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 provider: 'SOME_STRING_VALUE',
+                 provider_id: 'SOME_STRING_VALUE',
+                 username: 'SOME_STRING_VALUE',
+                 user_id: 'SOME_STRING_VALUE',
+                 application_id: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "application_id: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "provider: SOME_STRING_VALUE",
+                "provider_id: SOME_STRING_VALUE",
+                "sandbox_id: SOME_STRING_VALUE",
+                "user_id: SOME_STRING_VALUE",
+                "username: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'application_id': "SOME_STRING_VALUE",
+                'user_id': "SOME_STRING_VALUE",
+                'username': "SOME_STRING_VALUE",
+                'provider_id': "SOME_STRING_VALUE",
+                'provider': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET", "/sandbox/fxrates/headers/v1.2/fx/all",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: |-
+            require 'uri'
+            require 'net/http'
+
+            url = URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all")
+
+            http = Net::HTTP.new(url.host, url.port)
+            http.use_ssl = true
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+            request = Net::HTTP::Get.new(url)
+            request["content-type"] = 'application/json'
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+            request["application_id"] = 'SOME_STRING_VALUE'
+            request["user_id"] = 'SOME_STRING_VALUE'
+            request["username"] = 'SOME_STRING_VALUE'
+            request["provider_id"] = 'SOME_STRING_VALUE'
+            request["provider"] = 'SOME_STRING_VALUE'
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            response = http.request(request)
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/fx/all \
+              --header 'application_id: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'provider: SOME_STRING_VALUE' \
+              --header 'provider_id: SOME_STRING_VALUE' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --header 'user_id: SOME_STRING_VALUE' \
+              --header 'username: SOME_STRING_VALUE'
+  /sandbox:
+    post:
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: request
+          description: Sandbox identifier
+          schema:
+            $ref: '#/definitions/SandboxRequest'
+          in: body
+          required: true
+      responses:
+        '201':
+          description: '- Created'
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        '400':
+          description: "- SBX-20000: Invalid sandboxId\r\n- SBX-20002: Incorrect json format\r\n- SBX-40000: Sandbox with the same sandboxId already exists!\r\n- SBX-60000: Cannot Create Sandbox"
+      operationId: Sandbox_CreateSandbox
+      summary: Create Sandbox
+      description: "Creates a sandbox with unique sandbox id. This call can also be used to create users, accounts etc.\r\n            \r\n            \r\nSample request:\r\n            \r\n    POST /sandbox\r\n    {\r\n        \"sandboxId\": \"TestSandbox\"\r\n    }"
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox\"\n\n\tpayload := strings.NewReader(\"{\\\"sandboxId\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandboxId\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url: 'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { sandboxId: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"sandboxId\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST", "/sandbox/fxrates/headers/v1.2/sandbox",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandboxId":"<ADD STRING VALUE>"}'
+  '/sandbox/{sandbox_id}':
+    get:
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: '- OK'
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        '400':
+          description: '- SBX-20000: Invalid sandboxId'
+        '404':
+          description: '- SBX-30000: Sandbox Not Found'
+      operationId: Sandbox_ExportSandbox
+      summary: Export Sandbox
+      description: Export Sandbox data specified by sandbox id.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json'
+    put:
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: sandbox_id
+          description: Sandbox Id
+          in: path
+          required: true
+          type: string
+        - name: request
+          description: ''
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+          in: body
+          required: true
+      responses:
+        '200':
+          description: '- OK'
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        '400':
+          description: "- SBX-20000: Invalid sandboxId\r\n- SBX-20001: Concurrency exception.Please try again\r\n- SBX-20002: Incorrect json format\r\n- SBX-60001: Cannot Update Sandbox"
+        '404':
+          description: '- SBX-30000: Sandbox Not Found'
+      operationId: Sandbox_ImportSandbox
+      summary: Import Sandbox
+      description: "Imports sandbox data specified by sandbox id.\r\n            \r\n            \r\nSample request:\r\n            \r\n    PUT /sandbox/{sandbox_id}\r\n    {\r\n      \"SandboxID\": \"string\",\r\n      \"Users\": [\r\n        {\r\n          \"UserId\": \"88f9431d-834e-486a-910a-25b308a460cb\",\r\n          \"Username\": \"User1\",\r\n          \"ProviderId\": \"NBG.gr\",\r\n          \"Provider\": \"NBG\"\r\n        },\r\n        {\r\n          \"UserId\": \"ddc8e902-7645-4124-ad61-a62cf1e58267\",\r\n          \"Username\": \"User2\",\r\n          \"ProviderId\": \"NBG.gr\",\r\n          \"Provider\": \"NBG\"\r\n        }\r\n      ],\r\n      \"Accounts\": [\r\n        {\r\n          \"userId\": \"88f9431d-834e-486a-910a-25b308a460cb\",\r\n          \"accountId\": \"1234\",\r\n          \"accountType\": \"Account\",\r\n          \"accountNumber\": \"1234567890\",\r\n          \"accountDescription\": \"My Account\",\r\n          \"accountBalance\": 1000\r\n        },\r\n        {\r\n          \"userId\": \"88f9431d-834e-486a-910a-25b308a460cb\",\r\n          \"accountId\": \"1111\",\r\n          \"accountType\": \"Card\",\r\n          \"accountNumber\": \"987654321012\",\r\n          \"accountDescription\": \"My Card\",\r\n          \"accountBalance\": 1000\r\n        },\r\n        {\r\n          \"userId\": \"ddc8e902-7645-4124-ad61-a62cf1e58267\",\r\n          \"accountId\": \"9874\",\r\n          \"accountType\": \"Account\",\r\n          \"accountNumber\": \"9873210654\",\r\n          \"accountDescription\": \"Account!!\",\r\n          \"accountBalance\": 20000\r\n        },\r\n        {\r\n          \"userId\": \"ddc8e902-7645-4124-ad61-a62cf1e58267\",\r\n          \"accountId\": \"4444\",\r\n          \"accountType\": \"Card\",\r\n          \"accountNumber\": \"778899445566\",\r\n          \"accountDescription\": \"Card!!\",\r\n          \"accountBalance\": 3000\r\n        }\r\n      ]\r\n    }"
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "PUT");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandboxId\":\"<ADD
+            STRING VALUE>\",\"users\":[{\"Username\":\"<ADD STRING
+            VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD
+            STRING VALUE>\"}],\"fxRates\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_ECBREF\":\"<ADD STRING VALUE>\",\"DELT_TAS\":\"<ADD
+            STRING VALUE>\",\"DELT_TPS\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\",\"DELT_TAXT\":\"<ADD
+            STRING VALUE>\",\"DELT_ETEREF\":\"<ADD STRING
+            VALUE>\",\"DELT_TPXT\":\"<ADD STRING
+            VALUE>\"}],\"currencies\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\"}]}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.PUT);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandboxId\":\"<ADD
+            STRING VALUE>\",\"users\":[{\"Username\":\"<ADD STRING
+            VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD
+            STRING VALUE>\"}],\"fxRates\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_ECBREF\":\"<ADD STRING VALUE>\",\"DELT_TAS\":\"<ADD
+            STRING VALUE>\",\"DELT_TPS\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\",\"DELT_TAXT\":\"<ADD
+            STRING VALUE>\",\"DELT_ETEREF\":\"<ADD STRING
+            VALUE>\",\"DELT_TPXT\":\"<ADD STRING
+            VALUE>\"}],\"currencies\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\"}]}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D\"\n\n\tpayload := strings.NewReader(\"{\\\"sandboxId\\\":\\\"<ADD STRING VALUE>\\\",\\\"users\\\":[{\\\"Username\\\":\\\"<ADD STRING VALUE>\\\",\\\"ProviderId\\\":\\\"<ADD STRING VALUE>\\\",\\\"Provider\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"fxRates\\\":[{\\\"DELT_LEKT\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_ECBREF\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_TAS\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_TPS\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_NOM\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_TAXT\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_ETEREF\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_TPXT\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"currencies\\\":[{\\\"DELT_LEKT\\\":\\\"<ADD STRING VALUE>\\\",\\\"DELT_NOM\\\":\\\"<ADD STRING VALUE>\\\"}]}\")\n\n\treq, _ := http.NewRequest(\"PUT\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandboxId\":\"<ADD STRING
+            VALUE>\",\"users\":[{\"Username\":\"<ADD STRING
+            VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD
+            STRING VALUE>\"}],\"fxRates\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_ECBREF\":\"<ADD STRING VALUE>\",\"DELT_TAS\":\"<ADD
+            STRING VALUE>\",\"DELT_TPS\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\",\"DELT_TAXT\":\"<ADD
+            STRING VALUE>\",\"DELT_ETEREF\":\"<ADD STRING
+            VALUE>\",\"DELT_TPXT\":\"<ADD STRING
+            VALUE>\"}],\"currencies\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\"}]}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D")
+              .put(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'PUT',
+              url:
+               'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { sandboxId: '<ADD STRING VALUE>',
+                 users:
+                  [ { Username: '<ADD STRING VALUE>',
+                      ProviderId: '<ADD STRING VALUE>',
+                      Provider: '<ADD STRING VALUE>' } ],
+                 fxRates:
+                  [ { DELT_LEKT: '<ADD STRING VALUE>',
+                      DELT_ECBREF: '<ADD STRING VALUE>',
+                      DELT_TAS: '<ADD STRING VALUE>',
+                      DELT_TPS: '<ADD STRING VALUE>',
+                      DELT_NOM: '<ADD STRING VALUE>',
+                      DELT_TAXT: '<ADD STRING VALUE>',
+                      DELT_ETEREF: '<ADD STRING VALUE>',
+                      DELT_TPXT: '<ADD STRING VALUE>' } ],
+                 currencies:
+                  [ { DELT_LEKT: '<ADD STRING VALUE>',
+                      DELT_NOM: '<ADD STRING VALUE>' } ] },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "PUT",
+              CURLOPT_POSTFIELDS => "{\"sandboxId\":\"<ADD STRING VALUE>\",\"users\":[{\"Username\":\"<ADD STRING VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD STRING VALUE>\"}],\"fxRates\":[{\"DELT_LEKT\":\"<ADD STRING VALUE>\",\"DELT_ECBREF\":\"<ADD STRING VALUE>\",\"DELT_TAS\":\"<ADD STRING VALUE>\",\"DELT_TPS\":\"<ADD STRING VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\",\"DELT_TAXT\":\"<ADD STRING VALUE>\",\"DELT_ETEREF\":\"<ADD STRING VALUE>\",\"DELT_TPXT\":\"<ADD STRING VALUE>\"}],\"currencies\":[{\"DELT_LEKT\":\"<ADD STRING VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\"}]}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandboxId\":\"<ADD STRING
+            VALUE>\",\"users\":[{\"Username\":\"<ADD STRING
+            VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD
+            STRING VALUE>\"}],\"fxRates\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_ECBREF\":\"<ADD STRING VALUE>\",\"DELT_TAS\":\"<ADD
+            STRING VALUE>\",\"DELT_TPS\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\",\"DELT_TAXT\":\"<ADD
+            STRING VALUE>\",\"DELT_ETEREF\":\"<ADD STRING
+            VALUE>\",\"DELT_TPXT\":\"<ADD STRING
+            VALUE>\"}],\"currencies\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\"}]}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("PUT",
+            "/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D", payload,
+            headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Put.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandboxId\":\"<ADD STRING
+            VALUE>\",\"users\":[{\"Username\":\"<ADD STRING
+            VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD
+            STRING VALUE>\"}],\"fxRates\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_ECBREF\":\"<ADD STRING VALUE>\",\"DELT_TAS\":\"<ADD
+            STRING VALUE>\",\"DELT_TPS\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\",\"DELT_TAXT\":\"<ADD
+            STRING VALUE>\",\"DELT_ETEREF\":\"<ADD STRING
+            VALUE>\",\"DELT_TPXT\":\"<ADD STRING
+            VALUE>\"}],\"currencies\":[{\"DELT_LEKT\":\"<ADD STRING
+            VALUE>\",\"DELT_NOM\":\"<ADD STRING VALUE>\"}]}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request PUT \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandboxId":"<ADD STRING VALUE>","users":[{"Username":"<ADD STRING VALUE>","ProviderId":"<ADD STRING VALUE>","Provider":"<ADD STRING VALUE>"}],"fxRates":[{"DELT_LEKT":"<ADD STRING VALUE>","DELT_ECBREF":"<ADD STRING VALUE>","DELT_TAS":"<ADD STRING VALUE>","DELT_TPS":"<ADD STRING VALUE>","DELT_NOM":"<ADD STRING VALUE>","DELT_TAXT":"<ADD STRING VALUE>","DELT_ETEREF":"<ADD STRING VALUE>","DELT_TPXT":"<ADD STRING VALUE>"}],"currencies":[{"DELT_LEKT":"<ADD STRING VALUE>","DELT_NOM":"<ADD STRING VALUE>"}]}'
+    delete:
+      consumes: []
+      produces: []
+      tags:
+        - Sandbox
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: path
+          required: true
+          type: string
+      responses:
+        '204':
+          description: '- NoContent'
+        '400':
+          description: "- SBX-20000: Invalid sandboxId\r\n- SBX-60002: Cannot Delete Sandbox"
+        '404':
+          description: '- SBX-30000: Sandbox Not Found'
+      operationId: Sandbox_DeleteSandbox
+      summary: Delete Sandbox
+      description: Delete the Sandbox specified by sandbox id.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.DELETE);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"DELETE\", url, nil)\n\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D")
+              .delete(null)
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'DELETE',
+              url:
+               'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D',
+              headers: { 'client-id': 'SOME_APIKEY_VALUE' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "DELETE",
+              CURLOPT_HTTPHEADER => array(
+                "client-id: SOME_APIKEY_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = { 'client-id': "SOME_APIKEY_VALUE" }
+
+
+            conn.request("DELETE",
+            "/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Delete.new(url)
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request DELETE \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D \
+              --header 'client-id: SOME_APIKEY_VALUE'
+  '/sandbox/{sandbox_id}/users':
+    post:
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: request
+          description: ''
+          schema:
+            $ref: '#/definitions/CreateUserRequest'
+          in: body
+          required: true
+        - name: sandbox_id
+          description: ''
+          in: path
+          required: true
+          type: string
+      responses:
+        '201':
+          description: '- Created'
+          schema:
+            $ref: '#/definitions/SandboxUser'
+        '400':
+          description: "- SBX-20000: Invalid sandboxId\r\n- SBX-20002: Incorrect json format\r\n- SBX-40001: User with the same username already exists!\r\n- SBX-60001: Cannot Update Sandbox"
+      operationId: Sandbox_CreateSandboxUser
+      summary: Create Sandbox User
+      description: "Creates Sandbox User.\r\n\r\n\r\nSample request:\r\n\r\n    POST /sandbox/{sandbox_id}/users\r\n    {\r\n      \"username\": \"user3\"\r\n    }"
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"username\":\"<ADD
+            STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"username\":\"<ADD
+            STRING VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users\"\n\n\tpayload := strings.NewReader(\"{\\\"username\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"username\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { username: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"username\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"username\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"username\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/fxrates/headers/v1.2/sandbox/%7Bsandbox_id%7D/users \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"username":"<ADD STRING VALUE>"}'
+definitions:
+  FxRates:
+    description: Two Currencies FX Rates
+    type: object
+    properties:
+      currencyCode:
+        description: Currency code
+        type: string
+        example: '002'
+      currencySymbol:
+        description: Currency symbol
+        type: string
+        example: USD
+      exchangeBuy:
+        description: ΕΝΑΛΛΑΚΤΙΚΑ ΔΙΚΤΥΑ - ΑΓΟΡΑ
+        type: string
+        example: '1.16729000'
+      exchangeSell:
+        description: ΕΝΑΛΛΑΚΤΙΚΑ ΔΙΚΤΥΑ - ΠΩΛΗΣΗ
+        type: string
+        example: '1.09949000'
+      banknotesBuy:
+        description: ΞΕΝΑ ΤΡΑΠΕΖΟΓΡΑΜΜΑΤΙΑ - ΑΓΟΡΑ
+        type: string
+        example: '1.16729000'
+      banknotesSell:
+        description: ΞΕΝΑ ΤΡΑΠΕΖΟΓΡΑΜΜΑΤΙΑ - ΠΩΛΗΣΗ
+        type: string
+        example: '1.09949000'
+    example:
+      exchangeSell: '1.09949000'
+      banknotesSell: '1.09949000'
+      exchangeBuy: '1.16729000'
+      currencySymbol: USD
+      banknotesBuy: '1.16729000'
+      currencyCode: '002'
+  Currency:
+    description: Currency properties
+    type: object
+    properties:
+      currencyCode:
+        description: Currency code
+        type: string
+        example: '002'
+      currencySymbol:
+        description: Currency symbol
+        type: string
+        example: USD
+    example:
+      currencySymbol: USD
+      currencyCode: '002'
+  ApiError:
+    type: object
+    properties:
+      error:
+        type: string
+  SandboxRequest:
+    description: Sandbox Request
+    required:
+      - sandboxId
+    type: object
+    properties:
+      sandboxId:
+        description: Sandbox unique identifier. E.g MySandbox
+        type: string
+  SandboxDataModel:
+    description: Sandbox Data Model
+    type: object
+    properties:
+      sandboxId:
+        description: Sandbox unique identifier. E.g MySandbox
+        type: string
+      users:
+        description: Sandbox users.
+        type: array
+        items:
+          description: Sandbox User
+          type: object
+          properties:
+            Username:
+              description: Sandbox username
+              type: string
+            ProviderId:
+              description: Sandbox provider identifier (e.g NBG.gr)
+              type: string
+            Provider:
+              description: Sandbox provider (e.g NBG)
+              type: string
+      fxRates:
+        description: Sandbox Fx Rates.
+        type: array
+        items:
+          description: Sandbox Fx Rates
+          type: object
+          properties:
+            DELT_LEKT:
+              description: DELT_LEKT
+              type: string
+            DELT_ECBREF:
+              description: DELT_ECBREF
+              type: string
+            DELT_TAS:
+              description: DELT_TAS
+              type: string
+            DELT_TPS:
+              description: DELT_TPS
+              type: string
+            DELT_NOM:
+              description: DELT_NOM
+              type: string
+            DELT_TAXT:
+              description: DELT_TAXT
+              type: string
+            DELT_ETEREF:
+              description: DELT_ETEREF
+              type: string
+            DELT_TPXT:
+              description: DELT_TPXT
+              type: string
+      currencies:
+        description: Sandbox Currencies.
+        type: array
+        items:
+          description: Sandbox Currency
+          type: object
+          properties:
+            DELT_LEKT:
+              description: DELT_LEKT
+              type: string
+            DELT_NOM:
+              description: DELT_NOM
+              type: string
+  SandboxUser:
+    description: Sandbox User
+    type: object
+    properties:
+      Username:
+        description: Sandbox username
+        type: string
+      ProviderId:
+        description: Sandbox provider identifier (e.g NBG.gr)
+        type: string
+      Provider:
+        description: Sandbox provider (e.g NBG)
+        type: string
+  SandboxFxRates:
+    description: Sandbox Fx Rates
+    type: object
+    properties:
+      DELT_LEKT:
+        description: DELT_LEKT
+        type: string
+      DELT_ECBREF:
+        description: DELT_ECBREF
+        type: string
+      DELT_TAS:
+        description: DELT_TAS
+        type: string
+      DELT_TPS:
+        description: DELT_TPS
+        type: string
+      DELT_NOM:
+        description: DELT_NOM
+        type: string
+      DELT_TAXT:
+        description: DELT_TAXT
+        type: string
+      DELT_ETEREF:
+        description: DELT_ETEREF
+        type: string
+      DELT_TPXT:
+        description: DELT_TPXT
+        type: string
+  SandboxCurrency:
+    description: Sandbox Currency
+    type: object
+    properties:
+      DELT_LEKT:
+        description: DELT_LEKT
+        type: string
+      DELT_NOM:
+        description: DELT_NOM
+        type: string
+  CreateUserRequest:
+    description: Create user for sandbox
+    required:
+      - username
+    type: object
+    properties:
+      username:
+        description: User unique username
+        type: string
+securityDefinitions:
+  Client-Id:
+    type: apiKey
+    description: Application's Id
+    name: Client-Id
+    in: header
+security:
+  - Client-Id: []

@@ -1,0 +1,1297 @@
+swagger: '2.0'
+info:
+  version: v1
+  title: IBAN-TaxID Validation Sandbox API
+  description: "## Introduction\n\nWelcome to the IBAN-TaxID Validation Sandbox, here you will find guidelines for the interaction with the IBAN-TaxID Validation Sandbox API. Any user can be registered and check if an IBAN belongs to a specific TaxID.\n\nBelow you'll find details about our Sandbox and the complete list of the available endpoints . This Sandbox API provides a standard RESTful interface that enables a user to check if an IBAN belongs to a certain TaxID.\n\n\n\n## How To Get Started \n\n1. **Login/Register** to the NBG Technology HUB\n2. Go to **\"APPS\"** and  click **\"Create New App\"**:\n    1. Fill in the form fields. \n    2. Check **\"Client Credentials\"** \n\n    3. **Submit** your new APP\n    4. Store the APPs **\"Client ID\"** and **\"Client Secret\"**\n3. Go to **\"API PRODUCTS\"** and select the **[IBAN-TaxID Validation Platform](https://developer.nbg.gr/partner/apiProducts/)**\n4. Click **\"START USING THIS API\"**, choose your app and click **\"SUBSCRIBE\"**\n5. Get an Access Token using the **[Access Token](https://developer.nbg.gr/documentation/Get-Token-API-v1-4379#tag/Access-Token)** Flow and the **API scopes** provided in the Authentication and Authorization (OAuth2) section below\n\n      **Please note:** The access token is required for using the API and is valid for a specific period of time (3600 seconds).\n6. Create a **[Sandbox](https://developer.nbg.gr/partner/documentation/IBANTaxID-Validation-Sandbox-API-v1-6044#operation/Sandbox_CreateSandbox)**\n\n\n7. **Play** with the API\n\n**Authentication and Authorization (OAuth2)**\n\n This API version uses the OAuth2 protocol for authentication and authorization, which means that a Bearer (access token) should be acquired.\n\nAn access token can be retrieved using the client_id and client_secret of the APP that you created and subscribed in this API.The scopes are defined below: \n\n**SCOPES**\n\n **Sandbox**: \n\n     sandbox-ibantaxidvalidation-api-v1\n\n **Production**: \n\n      ibantaxidvalidation-api-v1\n\n**ENDPOINTS**\n\n**Token Endpoint:** https://my.nbg.gr/identity/connect/token\n\nSee more [here](https://developer.nbg.gr/oauth-document)\n\n**Create your Sandbox**\n\nSandboxes are self - contained testing environments that provide a simple way of testing the API without any real impact, meaning that no personal or financial data is used.\n\n You can create your Sandbox by invoking the POST /api/sandbox call by simply providing an \"id\" as your sandbox id and naming it almost anything you like. A sandbox with pre-populated data will be created.\n\n**Important!** Don't lose your sandbox_id, since you will need it for all the API calls. Sandbox endpoints are not included in the production version API.\n\nThe following HTTP **header parameters** are required for every call (except for sandbox operations): \n1.\tsandbox_id \n2.\t Authorization\n\n**Sandbox Operations:** \n1.\tCreate a sandbox: POST /sandbox \n2.\tExport a sandbox: GET /sandbox/{sandbox_id}\n3.\tImport a sandbox: PUT /sandbox/{sandbox_id}\n4.\tDelete a sandbox: DELETE /sandbox/{sandbox_id}\n\n## Error Codes:\n**Format**\n\n```json\n{\n  \"exception:{ \n         code:\"VLDM001\",\n         desc:\"Invalid Request\"\n }\n}\n```\n\n------------------------------------------------------------------------------------------ \n\n\n\nCheck out our  [Sandbox Postman Collection](https://github.com/NBGpartners/PostmanCollections/tree/master/IBAN%20TaxId%20Validation)\n\n Created by **NBG**. \n\nSee more at https://www.nbg.gr/\n\n # Entities \n\n Below, the main entities are documented.\n <a name=SandboxRequest></a> \n## SandboxRequest \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| sandboxId| -| string|\n\n <a name=SandboxDataModel></a> \n## SandboxDataModel \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| SandboxID| -| string|\n| Users| -| array|\n| transaction| -| array|\n\n <a name=SandboxUser></a> \n## SandboxUser \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| UserId| -| string|\n| Username| -| string|\n| ProviderId| -| string|\n| Provider| -| string|\n\n <a name=SandboxTransactions></a> \n## SandboxTransactions \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| UserId| -| string|\n| productType| -| string|\n| productNumber| -| string|\n\n <a name=Request></a> \n## Request \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| header | Entity | <details><summary>[RequestHeader](#RequestHeader)</summary><ul><li>ID [string]</li> <li>application [string]</li> <li>channel [string]</li> </ul></details> | \n| payload | Entity | <details><summary>[MatchRequest](#MatchRequest)</summary><ul><li>userid [string]</li> <li>call_seq_id [string]</li> <li>iban [string]</li> <li>taxId [string]</li> </ul></details> | \n\n <a name=RequestHeader></a> \n## RequestHeader \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| ID| (Unique Guid for each request)| string|\n| application| (Static Guid generated by NBG)| string|\n| channel| (Static value generated by NBG)| string|\n\n <a name=MatchRequest></a> \n## MatchRequest \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| userid| The sandbox user/The OAuth2 clientId in production| string|\n| call_seq_id| The unique reference number for the call| string|\n| iban| The account in IBAN format| string|\n| taxId| The tax identification number| string|\n\n <a name=Response></a> \n## Response \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| payload | Entity | <details><summary>[MatchResponse](#MatchResponse)</summary><ul><li>correct_combination [boolean]</li> <li>usage_allowed [boolean]</li> <li>error_code [string]</li> <li>validity_timestamp [string]</li> </ul></details> | \n| exception | Entity | <details><summary>[ResponseMessage](#ResponseMessage)</summary><ul><li>id [string]</li> <li>code [string]</li> <li>desc [string]</li> <li>sev [string]</li> <li>cat [string]</li> </ul></details> | \n| messages| -| array[[ResponseMessage](#ResponseMessage)]|\n| executionTime| -| number|\n\n <a name=MatchResponse></a> \n## MatchResponse \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| correct_combination| The result of the match| boolean|\n| usage_allowed| Indicator that the IBAN can be used for credit| boolean|\n| error_code| The code in case of an error| string|\n| validity_timestamp| The timestamp of data validation| string|\n\n <a name=ResponseMessage></a> \n## ResponseMessage \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| id| -| string|\n| code| -| string|\n| desc| -| string|\n| sev| -| string|\n| cat| -| string|\n"
+  contact:
+    email: developer@nbg.gr
+host: apis.nbg.gr
+basePath: /sandbox//ibantaxid.validation/oauth2/v1
+schemes:
+  - https
+paths:
+  /sandbox:
+    post:
+      tags:
+        - Sandbox
+      summary: Create Sandbox
+      description: >-
+        Creates sandbox with unique sandbox id. This call can also be used to
+        create users etc.
+      operationId: Sandbox_CreateSandbox
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SandboxRequest'
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox\"\n\n\tpayload := strings.NewReader(\"{\\\"sandboxId\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandboxId\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { sandboxId: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"sandboxId\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox//ibantaxid.validation/oauth2/v1/sandbox", payload,
+            headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandboxId":"<ADD STRING VALUE>"}'
+  '/sandbox/{sandbox_id}':
+    get:
+      tags:
+        - Sandbox
+      summary: Export Sandbox
+      description: Export Sandbox data specified by sandbox id.
+      operationId: Sandbox_ExportSandbox
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: sandbox_id
+          in: path
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json'
+    put:
+      tags:
+        - Sandbox
+      summary: Import Sandbox
+      description: Imports sandbox data specified by sandbox id.
+      operationId: Sandbox_ImportSandbox
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: sandbox_id
+          in: path
+          required: true
+          type: string
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "PUT");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"SandboxID\":\"<ADD
+            STRING VALUE>\",\"Users\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"Username\":\"<ADD STRING VALUE>\",\"ProviderId\":\"<ADD
+            STRING VALUE>\",\"Provider\":\"<ADD STRING
+            VALUE>\"}],\"transaction\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"productType\":\"<ADD STRING
+            VALUE>\",\"productNumber\":\"<ADD STRING VALUE>\"}]}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.PUT);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"SandboxID\":\"<ADD
+            STRING VALUE>\",\"Users\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"Username\":\"<ADD STRING VALUE>\",\"ProviderId\":\"<ADD
+            STRING VALUE>\",\"Provider\":\"<ADD STRING
+            VALUE>\"}],\"transaction\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"productType\":\"<ADD STRING
+            VALUE>\",\"productNumber\":\"<ADD STRING VALUE>\"}]}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D\"\n\n\tpayload := strings.NewReader(\"{\\\"SandboxID\\\":\\\"<ADD STRING VALUE>\\\",\\\"Users\\\":[{\\\"UserId\\\":\\\"<ADD STRING VALUE>\\\",\\\"Username\\\":\\\"<ADD STRING VALUE>\\\",\\\"ProviderId\\\":\\\"<ADD STRING VALUE>\\\",\\\"Provider\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"transaction\\\":[{\\\"UserId\\\":\\\"<ADD STRING VALUE>\\\",\\\"productType\\\":\\\"<ADD STRING VALUE>\\\",\\\"productNumber\\\":\\\"<ADD STRING VALUE>\\\"}]}\")\n\n\treq, _ := http.NewRequest(\"PUT\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"SandboxID\":\"<ADD STRING VALUE>\",\"Users\":[{\"UserId\":\"<ADD
+            STRING VALUE>\",\"Username\":\"<ADD STRING
+            VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD
+            STRING VALUE>\"}],\"transaction\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"productType\":\"<ADD STRING
+            VALUE>\",\"productNumber\":\"<ADD STRING VALUE>\"}]}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D")
+              .put(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'PUT',
+              url:
+               'https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { SandboxID: '<ADD STRING VALUE>',
+                 Users:
+                  [ { UserId: '<ADD STRING VALUE>',
+                      Username: '<ADD STRING VALUE>',
+                      ProviderId: '<ADD STRING VALUE>',
+                      Provider: '<ADD STRING VALUE>' } ],
+                 transaction:
+                  [ { UserId: '<ADD STRING VALUE>',
+                      productType: '<ADD STRING VALUE>',
+                      productNumber: '<ADD STRING VALUE>' } ] },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "PUT",
+              CURLOPT_POSTFIELDS => "{\"SandboxID\":\"<ADD STRING VALUE>\",\"Users\":[{\"UserId\":\"<ADD STRING VALUE>\",\"Username\":\"<ADD STRING VALUE>\",\"ProviderId\":\"<ADD STRING VALUE>\",\"Provider\":\"<ADD STRING VALUE>\"}],\"transaction\":[{\"UserId\":\"<ADD STRING VALUE>\",\"productType\":\"<ADD STRING VALUE>\",\"productNumber\":\"<ADD STRING VALUE>\"}]}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"SandboxID\":\"<ADD STRING
+            VALUE>\",\"Users\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"Username\":\"<ADD STRING VALUE>\",\"ProviderId\":\"<ADD
+            STRING VALUE>\",\"Provider\":\"<ADD STRING
+            VALUE>\"}],\"transaction\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"productType\":\"<ADD STRING
+            VALUE>\",\"productNumber\":\"<ADD STRING VALUE>\"}]}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("PUT",
+            "/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Put.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"SandboxID\":\"<ADD STRING
+            VALUE>\",\"Users\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"Username\":\"<ADD STRING VALUE>\",\"ProviderId\":\"<ADD
+            STRING VALUE>\",\"Provider\":\"<ADD STRING
+            VALUE>\"}],\"transaction\":[{\"UserId\":\"<ADD STRING
+            VALUE>\",\"productType\":\"<ADD STRING
+            VALUE>\",\"productNumber\":\"<ADD STRING VALUE>\"}]}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request PUT \
+              --url https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"SandboxID":"<ADD STRING VALUE>","Users":[{"UserId":"<ADD STRING VALUE>","Username":"<ADD STRING VALUE>","ProviderId":"<ADD STRING VALUE>","Provider":"<ADD STRING VALUE>"}],"transaction":[{"UserId":"<ADD STRING VALUE>","productType":"<ADD STRING VALUE>","productNumber":"<ADD STRING VALUE>"}]}'
+    delete:
+      tags:
+        - Sandbox
+      summary: Delete Sandbox
+      description: Delete Sandbox specified by sandbox id.
+      operationId: Sandbox_DeleteSandbox
+      consumes: []
+      produces: []
+      parameters:
+        - name: sandbox_id
+          in: path
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '204':
+          description: No Content
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.DELETE);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"DELETE\", url, nil)\n\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D")
+              .delete(null)
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'DELETE',
+              url:
+               'https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "DELETE",
+              CURLOPT_HTTPHEADER => array(
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("DELETE",
+            "/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Delete.new(url)
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request DELETE \
+              --url https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/sandbox/%7Bsandbox_id%7D \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE'
+  /Validation/match:
+    post:
+      tags:
+        - Validation
+      summary: Validate IBAN-TaxID
+      description: "Checks if IBAN belongs to a specific TaxID.\n\nTaxIDs starting with 2 results to a valid combination.  \r\n            \r\n            \r\nSample request:\r\n            \r\n    POST /match\r\n     {\r\n       header: { \r\n       \"ID\": \"2090341a-fa27-4235-b8c1-6e54cffaf0bd\",\r\n       \"application\": \"e63ed473-3c8e-4129-8f2d-d76aa6d1a1bb\",\r\n       \"channel\": \"organization\"\r\n       },\r\n       payload: {\r\n        \"userId\": \"d1ca4e9b-8f28-42ff-9a8b-a42aaa51fd0d\",\r\n        \"call_seq_id\": \"6546146418\",\r\n        \"iban\": \"GR2657484821695748236574891\",\r\n        \"taxId\": \"259844158\"\r\n       }\r\n    }"
+      operationId: Validation_match
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: request
+          in: body
+          description: ''
+          required: true
+          schema:
+            $ref: '#/definitions/MatchRequest'
+        - name: sandbox_id
+          in: header
+          description: Sandbox ID
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"userid\":\"<ADD STRING
+            VALUE>\",\"call_seq_id\":\"<ADD STRING VALUE>\",\"iban\":\"<ADD
+            STRING VALUE>\",\"taxId\":\"<ADD STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"userid\":\"<ADD STRING
+            VALUE>\",\"call_seq_id\":\"<ADD STRING VALUE>\",\"iban\":\"<ADD
+            STRING VALUE>\",\"taxId\":\"<ADD STRING VALUE>\"}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match\"\n\n\tpayload := strings.NewReader(\"{\\\"userid\\\":\\\"<ADD STRING VALUE>\\\",\\\"call_seq_id\\\":\\\"<ADD STRING VALUE>\\\",\\\"iban\\\":\\\"<ADD STRING VALUE>\\\",\\\"taxId\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType, "{\"userid\":\"<ADD
+            STRING VALUE>\",\"call_seq_id\":\"<ADD STRING
+            VALUE>\",\"iban\":\"<ADD STRING VALUE>\",\"taxId\":\"<ADD STRING
+            VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { userid: '<ADD STRING VALUE>',
+                 call_seq_id: '<ADD STRING VALUE>',
+                 iban: '<ADD STRING VALUE>',
+                 taxId: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"userid\":\"<ADD STRING VALUE>\",\"call_seq_id\":\"<ADD STRING VALUE>\",\"iban\":\"<ADD STRING VALUE>\",\"taxId\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox_id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"userid\":\"<ADD STRING VALUE>\",\"call_seq_id\":\"<ADD
+            STRING VALUE>\",\"iban\":\"<ADD STRING VALUE>\",\"taxId\":\"<ADD
+            STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox//ibantaxid.validation/oauth2/v1/Validation/match",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"userid\":\"<ADD STRING
+            VALUE>\",\"call_seq_id\":\"<ADD STRING VALUE>\",\"iban\":\"<ADD
+            STRING VALUE>\",\"taxId\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox//ibantaxid.validation/oauth2/v1/Validation/match \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --data '{"userid":"<ADD STRING VALUE>","call_seq_id":"<ADD STRING VALUE>","iban":"<ADD STRING VALUE>","taxId":"<ADD STRING VALUE>"}'
+definitions:
+  SandboxRequest:
+    required:
+      - sandboxId
+    type: object
+    properties:
+      sandboxId:
+        type: string
+  SandboxDataModel:
+    type: object
+    properties:
+      SandboxID:
+        type: string
+      Users:
+        type: array
+        items: &ref_0
+          type: object
+          properties:
+            UserId:
+              type: string
+            Username:
+              type: string
+            ProviderId:
+              type: string
+            Provider:
+              type: string
+      transaction:
+        type: array
+        items: &ref_1
+          type: object
+          properties:
+            UserId:
+              type: string
+            productType:
+              type: string
+            productNumber:
+              type: string
+  SandboxUser: *ref_0
+  SandboxTransactions: *ref_1
+  Request:
+    required:
+      - header
+      - payload
+    type: object
+    properties:
+      header:
+        $ref: '#/definitions/RequestHeader'
+      payload:
+        $ref: '#/definitions/MatchRequest'
+  RequestHeader:
+    required:
+      - ID
+    type: object
+    properties:
+      ID:
+        type: string
+        description: (Unique Guid for each request)
+      application:
+        type: string
+        description: (Static Guid generated by NBG)
+      channel:
+        type: string
+        description: (Static value generated by NBG)
+  MatchRequest:
+    type: object
+    properties:
+      userid:
+        type: string
+        description: The sandbox user/The OAuth2 clientId in production
+      call_seq_id:
+        type: string
+        description: The unique reference number for the call
+      iban:
+        type: string
+        description: The account in IBAN format
+      taxId:
+        type: string
+        description: The tax identification number
+  Response:
+    type: object
+    properties:
+      payload:
+        $ref: '#/definitions/MatchResponse'
+      exception:
+        $ref: '#/definitions/ResponseMessage'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/ResponseMessage'
+      executionTime:
+        format: double
+        type: number
+  MatchResponse:
+    type: object
+    properties:
+      correct_combination:
+        type: boolean
+        description: The result of the match
+      usage_allowed:
+        type: boolean
+        description: Indicator that the IBAN can be used for credit
+      error_code:
+        type: string
+        description: The code in case of an error
+      validity_timestamp:
+        format: date-time
+        type: string
+        description: The timestamp of data validation
+  ResponseMessage:
+    type: object
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      desc:
+        type: string
+      sev:
+        enum:
+          - Warning
+          - Error
+          - Info
+        type: string
+      cat:
+        enum:
+          - Business
+          - Communication
+          - Technical
+          - Security
+        type: string
+securityDefinitions:
+  Client-Id:
+    type: apiKey
+    description: Applications's Id
+    in: header
+    name: Client-Id
+security:
+  - Client-Id: []

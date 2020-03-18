@@ -1,0 +1,2940 @@
+swagger: '2.0'
+info:
+  title: Blockchain Sandbox API
+  version: v1
+  description: "## Functionality at a glance\r\n\r\nWelcome to Blockchain Registry Service sandbox API, an API that allows the interaction with NBG's Blockchain Registry Service. \r\n\r\nNBG is implementing a blockchain solution for storing and retrieving API data. The Blockchain Registry Service will offer the opportunity to any third-party, customer or organization, that uses the Bank's APIs, to store and retrieve their transactions on a private blockchain using smart contracts. For protecting the data and maintain the customer's privacy every transaction that is about to be stored on the blockchain will be transformed, in a one-way manner, to a digest.  A digest is a string of alpharithmetic characters impossible to reverse engineer. These digests will then be stored on the blockchain and can be identifiable by a specific UUID. So, no actual data will be stored on the blockchain, only digests that represent the fingerprints of the API data.\r\n\r\n### Business Transaction Definition \r\n\r\nA business transaction is considered an API transaction that contains one or more documents. A document can be any information of the API transaction, from the whole request body to a specific entry. As stated above, to protect the customer's privacy, the transactions that are about to be stored on the blockchain will be transformed in a one-way manner to a digest. To ensure the one-way transformation, salts will be used. Salts are randomly generated strings that go along with each document and each transaction to make the pre-transformed information unique. Afterward, these salts will be used for the verification process.\r\n\r\nFor more information about the transformation process, the storing mechanism and the retrieval process, proceed [here](https://github.com/myNBGcode/PostmanCollections/tree/master/Blockchain%20API).\r\n\r\n## The Api\r\n\r\nThis sandbox API will allow its users to perform the following interactions:\r\n\r\n1. Query the blockchain-state of a given transaction by using its UUID. A \"blockchain-state\" can be \"received\" meaning that the registry service has received the transaction, \"submitted\" when it has been submitted to the blockchain network, \"confirmed\" if it has been confirmed on the blockchain network (which is the last step) or \"failed\" for a failed attempt.\r\n\r\n2. Retrieve and then verify a specific business transaction. \"Retrieve\" means to get the pre-transformed data, while the \"Verify\" means to get the salts that used to transform the documents to its matching digests along with these digests. So given the salts, you can transform the data yourself, produce a new matching digest and compare it with the digest stored on the blockchain as a proof of existence for the corresponding business transaction.\r\n\r\n3. Verify a specific business transaction knowing the data and salt of the transaction. You should parse the UUID of the transaction, all the API data, the salt of the transaction that was used for the transformation and the Smart Contract's name and address.\r\n\r\n4. Retrieve and then verify specific documents of a business transaction. You should only ask for particular document names; the rest of the process is similar to operation 2.\r\n\r\n5. Verify specific documents of a business transaction by providing the document names, data and corresponding salts. Similarly to operation 3, you should provide the specific documents (names and data) and their corresponding salts. \r\n\r\n## Current State of Sandbox Blockchain\r\n\r\nIn this sandbox environment, we are simulating a blockchain. In this specific blockchain, we have stored many transactions with unique UUIDs. Three of them are transactions that have been confirmed in the blockchain network, one has been submitted but not confirmed and one has been received but not submitted and not confirmed\r\n\r\nThe UUIDs of the confirmed transactions are:\r\n* ba534cc4-359f-4945-bcb8-1dc2997cb194\r\n* b41ecaa0-009a-44d9-beed-4e533a8f1a5f\r\n* b4143ef3-7dfe-414e-a017-fe9a5f88e672\r\n\r\nThe UUID of the submitted transaction is:\r\n* 1fcdcedf-fc22-4e14-8be3-ff9a07bc75a8\r\n\r\nThe UUID of the received transaction is:\r\n* f98a50d3-2ed2-440d-9612-cf7f11bd1c50\r\n\r\nLet's suppose now, that you were the one that committed the three confirmed transactions. Below you can see the data, salts, and smart contract that correspond to these transactions.\r\nYou can use this data for retrieval and verification purposes.\r\n\r\nTransaction: ba534cc4-359f-4945-bcb8-1dc2997cb194:\r\n```\r\n    \"documents\": [\r\n      {\r\n        \"name\": \"req.field1\",\r\n        \"data\": \"GR4501457684503004564000103433467\"\r\n      },\r\n      {\r\n        \"name\": \"req.field2\",\r\n        \"data\": \"EUR\"\r\n      },\r\n      {\r\n        \"name\": \"req.field3\",\r\n        \"data\": \"900\"\r\n      },\r\n      {\r\n        \"name\": \"resp.field4\",\r\n        \"data\": \"success\"\r\n      }\r\n    ]\r\n  \r\n\r\n\r\n    \"ethereumContract\": {\r\n        \"className\": \"BtrxlogEthereumContract_v1\",\r\n        \"addressHex\": \"0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5\"\r\n    }\r\n    \r\n    \"saltOfBtrx\": {\r\n        \"uuid\": \"ba534cc4-359f-4945-bcb8-1dc2997cb194\",\r\n        \"saltHex\": \"0xc20388d7d3bb09a9cea7cb19d6dc26a50fb1e4492a1db6afb6be5a3b55eb1c4d\"\r\n    }\r\n    \r\n    \r\n    \"saltsOfDocuments\": [\r\n        {\r\n            \"name\": \"req.field1\",\r\n            \"saltHex\": \"0x75c26a1f42c279468805e8ad6cef1284ee5f390d917d56745bb13f77e66c5aae\"\r\n        },\r\n        {\r\n            \"name\": \"req.field2\",\r\n            \"saltHex\": \"0x29d6daa9e498e4811c709eff91bf28603f4bad9e7df8fc598d3281fb2e844043\"\r\n        },\r\n        {\r\n            \"name\": \"req.field3\",\r\n            \"saltHex\": \"0x725980af89c1892e274935ba94a1fa2eac485f8e596caa16e03fdf9f17e2dd73\"\r\n        },\r\n        {\r\n            \"name\": \"resp.field4\",\r\n            \"saltHex\": \"0x6f2d05c3e51a11c4947430aab3101dc80421079edc28f6a246c2bdc036f9095d\"\r\n        }\r\n    ]\r\n```\r\n\r\n\r\n\r\nTransaction: b41ecaa0-009a-44d9-beed-4e533a8f1a5f:\r\n```\r\n    \"documents\": [\r\n      {\r\n        \"name\": \"req.field1\",\r\n        \"data\": \"GR6561515678353211655686434544165\"\r\n      },\r\n      {\r\n        \"name\": \"req.field2\",\r\n        \"data\": \"39\"\r\n      },\r\n      {\r\n        \"name\": \"req.field3\",\r\n        \"data\": \"XXX 9999 adam sandler\"\r\n      }\r\n    ]\r\n    \r\n    \"ethereumContract\": {\r\n        \"className\": \"BtrxlogEthereumContract_v1\",\r\n        \"addressHex\": \"0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5\"\r\n    }\r\n    \r\n    \"saltOfBtrx\": {\r\n        \"uuid\": \"b41ecaa0-009a-44d9-beed-4e533a8f1a5f\",\r\n        \"saltHex\": \"0xad74f360cb3bc49ee8f988d1b8feae4b4fff400fa713b1ab1640eaac16dc1317\"\r\n    }\r\n    \r\n    \"saltsOfDocuments\": [\r\n        {\r\n            \"name\": \"req.field1\",\r\n            \"saltHex\": \"0x0b1830426ec2e80c9147b0242199eb83b3d05fd11e006bb2cbcb4bc9570d3465\"\r\n        },\r\n        {\r\n            \"name\": \"req.field2\",\r\n            \"saltHex\": \"0x61233daa62f8d0805081822d1c06642ccba9e2260d9883128a913521d1814ca9\"\r\n        },\r\n        {\r\n            \"name\": \"req.field3\",\r\n            \"saltHex\": \"0x47c3bff924dd9becc6e750cd404b7b6c86fba5ae9103b2622b7fec7c8e52f492\"\r\n        }\r\n    ]\r\n```\r\n\r\nTransaction: b4143ef3-7dfe-414e-a017-fe9a5f88e672:\r\n```\r\n    \"documents\": [\r\n      {\r\n        \"name\": \"req.field1\",\r\n        \"data\": \"GR3368165681546834531546836313151\"\r\n      },\r\n      {\r\n        \"name\": \"req.field2\",\r\n        \"data\": \"262.2\"\r\n      },\r\n      {\r\n        \"name\": \"req.field3\",\r\n        \"data\": \"Green Investment Inc.\"\r\n      }\r\n    ]\r\n    \r\n    \"ethereumContract\": {\r\n        \"className\": \"BtrxlogEthereumContract_v1\",\r\n        \"addressHex\": \"0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5\"\r\n    }\r\n    \r\n    \"saltOfBtrx\": {\r\n        \"uuid\": \"b4143ef3-7dfe-414e-a017-fe9a5f88e672\",\r\n        \"saltHex\": \"0x396bccdef788f97349c7271f396d535535440c948bfedcf2c3a2240b84f6e5e0\"\r\n    }\r\n    \r\n    \"saltsOfDocuments\": [\r\n        {\r\n            \"name\": \"req.field1\",\r\n            \"saltHex\": \"0x6e02bf01fa9ee1560216667402ad0f2ab90b625241d5d2acb93860c4a4d15aaf\"\r\n        },\r\n        {\r\n            \"name\": \"req.field2\",\r\n            \"saltHex\": \"0x1dc77e10deb3e5441e91deceec0801a8a2fae92b9497d8f287197035f4934376\"\r\n        },\r\n        {\r\n            \"name\": \"req.field3\",\r\n            \"saltHex\": \"0x5938e4d97815ec7a37c73024e412083fc412eaf9a54eefbc9f8f428d9cc70ecf\"\r\n        }\r\n    ]\r\n```\r\n\r\n\r\n## Quick Getting Started\r\n\r\n\r\n1. Login/Register to the NBG Developer Portal\r\n\r\n2. Go to APPS and click \"Create New App\"\r\n\r\n3. Go to API PRODUCTS and select an API\r\n\r\n4. Click \"Subscribe\" and choose your app\r\n\r\n5. Create a Sandbox\r\n\r\n6. Play with the API\r\n\r\n\r\n\r\n## Create Sandbox \r\nSandboxes are self - contained testing environments that provide a simple way of testing the API without any real impact, meaning that no personal or financial data is used.\r\n\r\nYour first job is to create a sandbox and save your sandboxId in order to be able to interact with the API.\r\n\r\nWe will create our sandbox by making an HTTP POST request to the following URL:\r\n[http://apis.nbg.gr/public/sandbox/blockchain/v0/sandbox](http://apis.nbg.gr/sandbox/blockchain/headers/v0.1/sandbox)\r\n\r\nRequest Body:\r\n```\r\n {\r\n   \"sandboxId\": \"test_blockchain_sandbox\"\r\n }\r\n ```\r\n\r\n**Note: Remember to store sandboxid somewhere in your application, because you will need to provide it as a header in each api call. Also remember to use the Client-Id provided when you create your application in the portal.**\r\n\r\nWhen you create the sandbox application it has some default data, for our use case example we will use **User1**.\r\n\r\n### Request Headers\r\n\r\nThey are the same in each call so we mention them first, in postman they are stored in each environment variables.\r\n\r\nRequest Headers:\r\n```\r\n'accept: text/json'\r\n'application_id: {{$guid}}'\r\n'content-type: text/json'  \r\n'sandbox-id: your_sandbox_id'\r\n'Client-Id: your_Client-Id'\r\n```\r\n\r\n\r\n## Feedback and Questions  \r\n\r\n\r\nWe would love to hear your feedback and answer your questions. Send us at\r\n[developer@nbg.gr](developer@nbg.gr)\r\n\r\n\r\nCheck out our [Sandbox Postman\r\nCollection](https://github.com/myNBGcode/PostmanCollections/tree/master/Blockchain%20API)!\r\n\r\n\r\n------------------------------------------------------------------------------------------ \r\n\r\n\r\nCreated by [**NBG**](https://www.nbg.gr/).\r\n\r\n\r\n------------------------------------------------------------------------------------------ \r\n\r\n------------------------------------------------------------------------------------------\n\n # Entities \n\n Below, the main entities are documented.\n <a name=transactionStatusRequest></a> \n## transactionStatusRequest \nThe request body for transactionStatus \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| A unique identifier for each transaction| string|\n\n <a name=transactionInfo></a> \n## transactionInfo \nThe information for a specific transaction\n \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n| receivedStamp| -| string|\n| status| The status of a transaction on the blockchain| object|\n| ethereumContract| The smart contract that the transaction was sent to| object|\n| ethereumSubmission| -| object|\n| ethereumConfirmation| -| object|\n\n <a name=status></a> \n## status \nThe status of a transaction on the blockchain \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| code| 1 for received, 2 for submitted, 101 for confirmed, 201 for failed| integer|\n| name| -| string|\n| message| -| string|\n| lastUpdatedStamp| -| string|\n\n <a name=ethereumSubmission></a> \n## ethereumSubmission \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| transactionHashHex| The hash of the transaction as intended from the ethereum protocol| string|\n| stamp| -| string|\n\n <a name=ethereumConfirmation></a> \n## ethereumConfirmation \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| blockStamp| -| string|\n| blockNumber| -| integer|\n| transactionStatus| -| string|\n\n <a name=transactionLog></a> \n## transactionLog \nThe transaction log \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| uuid of the transaction| string|\n| blockstamp| -| string|\n| digests| The transformed documets that have been stored on the blockchain| array|\n| contract | Entity | <details><summary>[contract](#contract)</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details> | \n\n <a name=registryResp></a> \n## registryResp \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| saltedDocuments| A list of the salted documents| array[[saltedDocument](#saltedDocument)]|\n| ethereumContract | Entity | <details><summary>[ethereumContract](#ethereumContract)</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details> | \n\n <a name=documentVerification></a> \n## documentVerification \nThe document along with its salt, matching digest and verification outcome \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| saltedDocument| A document along with its salt| object|\n| matchingDigestHex| The transformed document that has been stored on the blockchain| string|\n| verificationOutcome| The result of the verification process| string|\n\n <a name=saltedDocument></a> \n## saltedDocument \nA document along with its salt \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| document| A document that has been stored on the blockchain| object|\n| saltHex| -| string|\n\n <a name=document></a> \n## document \nA document that has been stored on the blockchain \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| name| -| string|\n| data| -| string|\n\n <a name=ethereumContract></a> \n## ethereumContract \nThe smart contract that the transaction was sent to \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| className| -| string|\n| addressHex| Smart Contract's ethereum address| string|\n\n <a name=contract></a> \n## contract \nThe smart contract that the transaction was sent to \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| className| -| string|\n| addressHex| Smart Contract's ethereum address| string|\n\n <a name=createSandbox></a> \n## createSandbox \nThe root of the createSandbox type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| sandboxId| -| string|\n\n <a name=SandboxDataModel></a> \n## SandboxDataModel \nThe root of the SandboxDataModel type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| sandboxId| -| string|\n| blockchain| List of transactionInfo obects| array|\n| verificationData| List of documentVerification objects| array|\n\n <a name=CreateSandboxRequest></a> \n## CreateSandboxRequest \nThe root of the CreateSandboxRequest type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| sandboxId| -| string|\n\n <a name=verifyGivenDocumentRequest></a> \n## verifyGivenDocumentRequest \nThe root of the verifyGivenDocumentRequest type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n| saltedDocuments| -| array|\n| contract| The smart contract that the transaction was sent to| object|\n\n <a name=ethereumConnectionConfig></a> \n## ethereumConnectionConfig \nThe root of the ethereumConnectionConfig type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| clientUrl| -| string|\n| accountPrivateKey| -| string|\n\n <a name=retrieveThenVerifyDocumentRequest></a> \n## retrieveThenVerifyDocumentRequest \nThe root of the retrieveThenVerifyDocument type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n| docnames| -| array|\n\n <a name=retrieveThenVerifyTransactionRequest></a> \n## retrieveThenVerifyTransactionRequest \nThe root of the retrieveThenVerifyTransactionRequest type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n\n <a name=retrieveThenVerifyTransactionResponse></a> \n## retrieveThenVerifyTransactionResponse \nThe root of the retrieveThenVerifyResponse type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| saltedTransaction | Entity | <details><summary>[saltedTransaction](#saltedTransaction)</summary><ul><li>uuid [string]</li> <li>saltHex [string]</li> <li>documents [array[[document](#document)]]</li> </ul></details> | \n| ethereumContract | Entity | <details><summary>[ethereumContract](#ethereumContract)</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details> | \n| transactionLog | Entity | <details><summary>[transactionLog](#transactionLog)</summary><ul><li>uuid [string]</li> <li>blockstamp [string]</li> <li>digests [array]</li> <li><details><summary>contract [[contract](#contract)]</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details></li></ul></details> | \n| transactionVerification | Entity | <details><summary>[transactionVerification](#transactionVerification)</summary><ul><li>clientUrl [string]</li> <li>accountPrivateKey [string]</li> </ul></details> | \n\n <a name=saltedTransaction></a> \n## saltedTransaction \nThe root of the saltedTransaction type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n| saltHex| -| string|\n| documents| -| array[[document](#document)]|\n\n <a name=transactionVerification></a> \n## transactionVerification \nThe root of the transactionVerification type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| clientUrl| -| string|\n| accountPrivateKey| -| string|\n\n <a name=verifyGivenDocumentResponse></a> \n## verifyGivenDocumentResponse \nThe root of the verifyGivenDocumentResponse type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| documentVerifications| -| array[[documentVerification](#documentVerification)]|\n| btrxlogResp | Entity | <details><summary>[transactionLog](#transactionLog)</summary><ul><li>uuid [string]</li> <li>blockstamp [string]</li> <li>digests [array]</li> <li><details><summary>contract [[contract](#contract)]</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details></li></ul></details> | \n\n <a name=verifyGivenTransactionRequest></a> \n## verifyGivenTransactionRequest \nThe root of the verifyGivenTransactionRequest type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n| documents| -| array|\n| saltHex| -| string|\n| contract| The smart contract that the transaction was sent to| object|\n\n <a name=transactionStatusResponse></a> \n## transactionStatusResponse \nThe response of the transaction status.  \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| transactionInfo | Entity | <details><summary>[transactionInfo](#transactionInfo)</summary><ul><li>uuid [string]</li> <li>receivedStamp [string]</li> <li>status [object]</li> <li>ethereumContract [object]</li> <li>ethereumSubmission [object]</li> <li>ethereumConfirmation [object]</li> </ul></details> | \n\n <a name=retrieveThenVerifyDocumentResponse></a> \n## retrieveThenVerifyDocumentResponse \nThe root of the retrieveThenVerifyDocumentResponse type's schema.\r\n \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| registryResp | Entity | <details><summary>[registryResp](#registryResp)</summary><ul><li>saltedDocuments [array[[saltedDocument](#saltedDocument)]]</li> <li><details><summary>ethereumContract [[ethereumContract](#ethereumContract)]</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details></li></ul></details> | \n| transactionLog | Entity | <details><summary>[transactionLog](#transactionLog)</summary><ul><li>uuid [string]</li> <li>blockstamp [string]</li> <li>digests [array]</li> <li><details><summary>contract [[contract](#contract)]</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details></li></ul></details> | \n| documentVerifications| -| array[[documentVerification](#documentVerification)]|\n\n <a name=verifyGivenTransactionResponse></a> \n## verifyGivenTransactionResponse \nThe root of the verifyGivenTransactionResponse type's schema. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| btrxlogResp | Entity | <details><summary>[transactionLog](#transactionLog)</summary><ul><li>uuid [string]</li> <li>blockstamp [string]</li> <li>digests [array]</li> <li><details><summary>contract [[contract](#contract)]</summary><ul><li>className [string]</li> <li>addressHex [string]</li> </ul></details></li></ul></details> | \n| btrxVerification | Entity | <details><summary>[btrxVerification](#btrxVerification)</summary><ul><li>uuid [string]</li> <li>matchingDigestHex [string]</li> <li>verificationOutcome [string]</li> </ul></details> | \n\n <a name=btrxVerification></a> \n## btrxVerification \nThe verification of a business transaction. \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| uuid| -| string|\n| matchingDigestHex| -| string|\n| verificationOutcome| -| string|\n"
+host: apis.nbg.gr
+basePath: /sandbox/blockchain/headers/v1
+schemes:
+  - https
+paths:
+  /sandbox:
+    post:
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: request
+          description: Sandbox name
+          schema:
+            $ref: '#/definitions/CreateSandboxRequest'
+          in: body
+          required: true
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      operationId: Sandbox_CreateSandbox
+      summary: Create Sandbox
+      description: "Import bulk data into the sandbox. This call can be used to create banks, users, accounts and transactions.\r\n\r\n\r\nSample request:\r\n            \r\n    POST /Create Sandbox\r\n    {\r\n        \"sandboxId\": \"TestSandbox\"\r\n    }"
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox\"\n\n\tpayload := strings.NewReader(\"{\\\"sandboxId\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandboxId\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url: 'https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { sandboxId: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"sandboxId\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST", "/sandbox/blockchain/headers/v1/sandbox",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandboxId":"<ADD STRING VALUE>"}'
+  '/sandbox/{sandbox_id}':
+    get:
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      operationId: Sandbox_ExportSandbox
+      summary: Export Sandbox
+      description: Export Sandbox data specified by sandbox id.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json'
+    put:
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      tags:
+        - Sandbox
+      parameters:
+        - name: request
+          description: ''
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+          in: body
+          required: true
+        - name: sandbox_id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/SandboxDataModel'
+      operationId: Sandbox_ImportSandbox
+      summary: Import Sandbox
+      description: Imports sandbox data specified by sandbox id.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "PUT");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandboxId\":\"<ADD
+            STRING VALUE>\",\"blockchain\":[{\"uuid\":\"<ADD STRING
+            VALUE>\",\"receivedStamp\":\"<ADD STRING
+            VALUE>\",\"status\":{\"code\":0,\"name\":\"<ADD STRING
+            VALUE>\",\"message\":\"<ADD STRING
+            VALUE>\",\"lastUpdatedStamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumContract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING
+            VALUE>\"},\"ethereumSubmission\":{\"transactionHashHex\":\"<ADD
+            STRING VALUE>\",\"stamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumConfirmation\":{\"blockStamp\":\"<ADD STRING
+            VALUE>\",\"blockNumber\":0,\"transactionStatus\":\"<ADD STRING
+            VALUE>\"}}],\"verificationData\":[{\"saltedDocument\":{\"document\":{\"name\":\"<ADD
+            STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD
+            STRING VALUE>\"},\"matchingDigestHex\":\"<ADD STRING
+            VALUE>\",\"verificationOutcome\":\"<ADD STRING VALUE>\"}]}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.PUT);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandboxId\":\"<ADD
+            STRING VALUE>\",\"blockchain\":[{\"uuid\":\"<ADD STRING
+            VALUE>\",\"receivedStamp\":\"<ADD STRING
+            VALUE>\",\"status\":{\"code\":0,\"name\":\"<ADD STRING
+            VALUE>\",\"message\":\"<ADD STRING
+            VALUE>\",\"lastUpdatedStamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumContract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING
+            VALUE>\"},\"ethereumSubmission\":{\"transactionHashHex\":\"<ADD
+            STRING VALUE>\",\"stamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumConfirmation\":{\"blockStamp\":\"<ADD STRING
+            VALUE>\",\"blockNumber\":0,\"transactionStatus\":\"<ADD STRING
+            VALUE>\"}}],\"verificationData\":[{\"saltedDocument\":{\"document\":{\"name\":\"<ADD
+            STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD
+            STRING VALUE>\"},\"matchingDigestHex\":\"<ADD STRING
+            VALUE>\",\"verificationOutcome\":\"<ADD STRING VALUE>\"}]}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D\"\n\n\tpayload := strings.NewReader(\"{\\\"sandboxId\\\":\\\"<ADD STRING VALUE>\\\",\\\"blockchain\\\":[{\\\"uuid\\\":\\\"<ADD STRING VALUE>\\\",\\\"receivedStamp\\\":\\\"<ADD STRING VALUE>\\\",\\\"status\\\":{\\\"code\\\":0,\\\"name\\\":\\\"<ADD STRING VALUE>\\\",\\\"message\\\":\\\"<ADD STRING VALUE>\\\",\\\"lastUpdatedStamp\\\":\\\"<ADD STRING VALUE>\\\"},\\\"ethereumContract\\\":{\\\"className\\\":\\\"<ADD STRING VALUE>\\\",\\\"addressHex\\\":\\\"<ADD STRING VALUE>\\\"},\\\"ethereumSubmission\\\":{\\\"transactionHashHex\\\":\\\"<ADD STRING VALUE>\\\",\\\"stamp\\\":\\\"<ADD STRING VALUE>\\\"},\\\"ethereumConfirmation\\\":{\\\"blockStamp\\\":\\\"<ADD STRING VALUE>\\\",\\\"blockNumber\\\":0,\\\"transactionStatus\\\":\\\"<ADD STRING VALUE>\\\"}}],\\\"verificationData\\\":[{\\\"saltedDocument\\\":{\\\"document\\\":{\\\"name\\\":\\\"<ADD STRING VALUE>\\\",\\\"data\\\":\\\"<ADD STRING VALUE>\\\"},\\\"saltHex\\\":\\\"<ADD STRING VALUE>\\\"},\\\"matchingDigestHex\\\":\\\"<ADD STRING VALUE>\\\",\\\"verificationOutcome\\\":\\\"<ADD STRING VALUE>\\\"}]}\")\n\n\treq, _ := http.NewRequest(\"PUT\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandboxId\":\"<ADD STRING
+            VALUE>\",\"blockchain\":[{\"uuid\":\"<ADD STRING
+            VALUE>\",\"receivedStamp\":\"<ADD STRING
+            VALUE>\",\"status\":{\"code\":0,\"name\":\"<ADD STRING
+            VALUE>\",\"message\":\"<ADD STRING
+            VALUE>\",\"lastUpdatedStamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumContract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING
+            VALUE>\"},\"ethereumSubmission\":{\"transactionHashHex\":\"<ADD
+            STRING VALUE>\",\"stamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumConfirmation\":{\"blockStamp\":\"<ADD STRING
+            VALUE>\",\"blockNumber\":0,\"transactionStatus\":\"<ADD STRING
+            VALUE>\"}}],\"verificationData\":[{\"saltedDocument\":{\"document\":{\"name\":\"<ADD
+            STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD
+            STRING VALUE>\"},\"matchingDigestHex\":\"<ADD STRING
+            VALUE>\",\"verificationOutcome\":\"<ADD STRING VALUE>\"}]}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D")
+              .put(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'PUT',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { sandboxId: '<ADD STRING VALUE>',
+                 blockchain:
+                  [ { uuid: '<ADD STRING VALUE>',
+                      receivedStamp: '<ADD STRING VALUE>',
+                      status:
+                       { code: 0,
+                         name: '<ADD STRING VALUE>',
+                         message: '<ADD STRING VALUE>',
+                         lastUpdatedStamp: '<ADD STRING VALUE>' },
+                      ethereumContract:
+                       { className: '<ADD STRING VALUE>',
+                         addressHex: '<ADD STRING VALUE>' },
+                      ethereumSubmission:
+                       { transactionHashHex: '<ADD STRING VALUE>',
+                         stamp: '<ADD STRING VALUE>' },
+                      ethereumConfirmation:
+                       { blockStamp: '<ADD STRING VALUE>',
+                         blockNumber: 0,
+                         transactionStatus: '<ADD STRING VALUE>' } } ],
+                 verificationData:
+                  [ { saltedDocument:
+                       { document: { name: '<ADD STRING VALUE>', data: '<ADD STRING VALUE>' },
+                         saltHex: '<ADD STRING VALUE>' },
+                      matchingDigestHex: '<ADD STRING VALUE>',
+                      verificationOutcome: '<ADD STRING VALUE>' } ] },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "PUT",
+              CURLOPT_POSTFIELDS => "{\"sandboxId\":\"<ADD STRING VALUE>\",\"blockchain\":[{\"uuid\":\"<ADD STRING VALUE>\",\"receivedStamp\":\"<ADD STRING VALUE>\",\"status\":{\"code\":0,\"name\":\"<ADD STRING VALUE>\",\"message\":\"<ADD STRING VALUE>\",\"lastUpdatedStamp\":\"<ADD STRING VALUE>\"},\"ethereumContract\":{\"className\":\"<ADD STRING VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"},\"ethereumSubmission\":{\"transactionHashHex\":\"<ADD STRING VALUE>\",\"stamp\":\"<ADD STRING VALUE>\"},\"ethereumConfirmation\":{\"blockStamp\":\"<ADD STRING VALUE>\",\"blockNumber\":0,\"transactionStatus\":\"<ADD STRING VALUE>\"}}],\"verificationData\":[{\"saltedDocument\":{\"document\":{\"name\":\"<ADD STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD STRING VALUE>\"},\"matchingDigestHex\":\"<ADD STRING VALUE>\",\"verificationOutcome\":\"<ADD STRING VALUE>\"}]}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandboxId\":\"<ADD STRING
+            VALUE>\",\"blockchain\":[{\"uuid\":\"<ADD STRING
+            VALUE>\",\"receivedStamp\":\"<ADD STRING
+            VALUE>\",\"status\":{\"code\":0,\"name\":\"<ADD STRING
+            VALUE>\",\"message\":\"<ADD STRING
+            VALUE>\",\"lastUpdatedStamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumContract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING
+            VALUE>\"},\"ethereumSubmission\":{\"transactionHashHex\":\"<ADD
+            STRING VALUE>\",\"stamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumConfirmation\":{\"blockStamp\":\"<ADD STRING
+            VALUE>\",\"blockNumber\":0,\"transactionStatus\":\"<ADD STRING
+            VALUE>\"}}],\"verificationData\":[{\"saltedDocument\":{\"document\":{\"name\":\"<ADD
+            STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD
+            STRING VALUE>\"},\"matchingDigestHex\":\"<ADD STRING
+            VALUE>\",\"verificationOutcome\":\"<ADD STRING VALUE>\"}]}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("PUT",
+            "/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D", payload,
+            headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Put.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"sandboxId\":\"<ADD STRING
+            VALUE>\",\"blockchain\":[{\"uuid\":\"<ADD STRING
+            VALUE>\",\"receivedStamp\":\"<ADD STRING
+            VALUE>\",\"status\":{\"code\":0,\"name\":\"<ADD STRING
+            VALUE>\",\"message\":\"<ADD STRING
+            VALUE>\",\"lastUpdatedStamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumContract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING
+            VALUE>\"},\"ethereumSubmission\":{\"transactionHashHex\":\"<ADD
+            STRING VALUE>\",\"stamp\":\"<ADD STRING
+            VALUE>\"},\"ethereumConfirmation\":{\"blockStamp\":\"<ADD STRING
+            VALUE>\",\"blockNumber\":0,\"transactionStatus\":\"<ADD STRING
+            VALUE>\"}}],\"verificationData\":[{\"saltedDocument\":{\"document\":{\"name\":\"<ADD
+            STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD
+            STRING VALUE>\"},\"matchingDigestHex\":\"<ADD STRING
+            VALUE>\",\"verificationOutcome\":\"<ADD STRING VALUE>\"}]}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request PUT \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandboxId":"<ADD STRING VALUE>","blockchain":[{"uuid":"<ADD STRING VALUE>","receivedStamp":"<ADD STRING VALUE>","status":{"code":0,"name":"<ADD STRING VALUE>","message":"<ADD STRING VALUE>","lastUpdatedStamp":"<ADD STRING VALUE>"},"ethereumContract":{"className":"<ADD STRING VALUE>","addressHex":"<ADD STRING VALUE>"},"ethereumSubmission":{"transactionHashHex":"<ADD STRING VALUE>","stamp":"<ADD STRING VALUE>"},"ethereumConfirmation":{"blockStamp":"<ADD STRING VALUE>","blockNumber":0,"transactionStatus":"<ADD STRING VALUE>"}}],"verificationData":[{"saltedDocument":{"document":{"name":"<ADD STRING VALUE>","data":"<ADD STRING VALUE>"},"saltHex":"<ADD STRING VALUE>"},"matchingDigestHex":"<ADD STRING VALUE>","verificationOutcome":"<ADD STRING VALUE>"}]}'
+    delete:
+      consumes: []
+      produces: []
+      tags:
+        - Sandbox
+      parameters:
+        - name: sandbox_id
+          description: Sandbox ID
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+      operationId: Sandbox_DeleteSandbox
+      summary: Delete Sandbox
+      description: Delete Sandbox specified by sandbox id.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.DELETE);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"DELETE\", url, nil)\n\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D")
+              .delete(null)
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'DELETE',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D',
+              headers: { 'client-id': 'SOME_APIKEY_VALUE' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "DELETE",
+              CURLOPT_HTTPHEADER => array(
+                "client-id: SOME_APIKEY_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = { 'client-id': "SOME_APIKEY_VALUE" }
+
+
+            conn.request("DELETE",
+            "/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Delete.new(url)
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request DELETE \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/sandbox/%7Bsandbox_id%7D \
+              --header 'client-id: SOME_APIKEY_VALUE'
+  '/blockchain/transactionStatus/{UUID}':
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Blockchain
+      parameters:
+        - name: sandbox-id
+          description: The unique name of your Sandbox
+          schema:
+            default: ''
+            type: string
+          in: header
+          required: true
+          type: string
+        - name: UUID
+          description: The UUID of the transaction
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/transactionStatusResponse'
+      summary: Retrieve a transaction's status
+      description: >-
+        By using this operation, the user can retrieve the status for a given
+        transaction. Given that the user (or someone else) has sent a
+        transaction on the blockchain, he can now retrieve its status which will
+        be either received or submitted or confirmed (or failed).
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox-id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("sandbox-id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox-id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D")
+              .get()
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox-id", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'sandbox-id': 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox-id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox-id': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox-id"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transactionStatus/%7BUUID%7D \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox-id: SOME_STRING_VALUE'
+  /blockchain/transaction/verifyGiven:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Blockchain
+      parameters:
+        - name: sandbox-id
+          description: The unique name of your Sandbox
+          schema:
+            default: ''
+            type: string
+          in: header
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: '#/definitions/verifyGivenTransactionRequest'
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/verifyGivenTransactionResponse'
+      summary: Verify a specific transaction
+      description: >-
+        Verify a specific business transaction knowing the data and the salt of
+        the transaction.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox-id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"documents\":[{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"}],\"saltHex\":\"<ADD STRING
+            VALUE>\",\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("sandbox-id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"documents\":[{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"}],\"saltHex\":\"<ADD STRING
+            VALUE>\",\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven\"\n\n\tpayload := strings.NewReader(\"{\\\"uuid\\\":\\\"<ADD STRING VALUE>\\\",\\\"documents\\\":[{\\\"name\\\":\\\"<ADD STRING VALUE>\\\",\\\"data\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"saltHex\\\":\\\"<ADD STRING VALUE>\\\",\\\"contract\\\":{\\\"className\\\":\\\"<ADD STRING VALUE>\\\",\\\"addressHex\\\":\\\"<ADD STRING VALUE>\\\"}}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox-id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType, "{\"uuid\":\"<ADD
+            STRING VALUE>\",\"documents\":[{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"}],\"saltHex\":\"<ADD STRING
+            VALUE>\",\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox-id", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'sandbox-id': 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { uuid: '<ADD STRING VALUE>',
+                 documents:
+                  [ { name: '<ADD STRING VALUE>', data: '<ADD STRING VALUE>' } ],
+                 saltHex: '<ADD STRING VALUE>',
+                 contract:
+                  { className: '<ADD STRING VALUE>',
+                    addressHex: '<ADD STRING VALUE>' } },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"uuid\":\"<ADD STRING VALUE>\",\"documents\":[{\"name\":\"<ADD STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"}],\"saltHex\":\"<ADD STRING VALUE>\",\"contract\":{\"className\":\"<ADD STRING VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox-id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"documents\":[{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"}],\"saltHex\":\"<ADD STRING
+            VALUE>\",\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox-id': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox-id"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"documents\":[{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"}],\"saltHex\":\"<ADD STRING
+            VALUE>\",\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/verifyGiven \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox-id: SOME_STRING_VALUE' \
+              --data '{"uuid":"<ADD STRING VALUE>","documents":[{"name":"<ADD STRING VALUE>","data":"<ADD STRING VALUE>"}],"saltHex":"<ADD STRING VALUE>","contract":{"className":"<ADD STRING VALUE>","addressHex":"<ADD STRING VALUE>"}}'
+  /blockchain/transaction/retrieveThenVerify:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Blockchain
+      parameters:
+        - name: sandbox-id
+          description: The unique name of your Sandbox
+          schema:
+            default: ''
+            type: string
+          in: header
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: '#/definitions/retrieveThenVerifyTransactionRequest'
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/retrieveThenVerifyTransactionResponse'
+      summary: Retrieve and then verify a transaction.
+      description: >-
+        Retrieve and then verify a specific business transaction. "Retrieve"
+        means to get the pre-transformed data, while the "Verify" means to get
+        the salts that used to transform the documents to its matching digests
+        along with these digests. So given the salts, you can transform the data
+        yourself, produce a new matching digest and search for it on the
+        blockchain as a proof of existence for the corresponding business
+        transaction.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox-id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"uuid\":\"<ADD STRING
+            VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("sandbox-id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"uuid\":\"<ADD STRING
+            VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify\"\n\n\tpayload := strings.NewReader(\"{\\\"uuid\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox-id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType, "{\"uuid\":\"<ADD
+            STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox-id", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'sandbox-id': 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { uuid: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"uuid\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox-id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"uuid\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox-id': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox-id"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"uuid\":\"<ADD STRING VALUE>\"}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/transaction/retrieveThenVerify \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox-id: SOME_STRING_VALUE' \
+              --data '{"uuid":"<ADD STRING VALUE>"}'
+  /blockchain/document/verifyGiven:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Blockchain
+      parameters:
+        - name: sandbox-id
+          description: The unique name of your Sandbox
+          schema:
+            default: ''
+            type: string
+          in: header
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: '#/definitions/verifyGivenDocumentRequest'
+          in: body
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/verifyGivenDocumentResponse'
+      summary: Verify specific documents
+      description: >+
+        Verify specific documents of a business transaction by providing the
+        document names, data and corresponding salts.
+
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox-id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"saltedDocuments\":[{\"document\":{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD STRING
+            VALUE>\"}],\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("sandbox-id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"saltedDocuments\":[{\"document\":{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD STRING
+            VALUE>\"}],\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven\"\n\n\tpayload := strings.NewReader(\"{\\\"uuid\\\":\\\"<ADD STRING VALUE>\\\",\\\"saltedDocuments\\\":[{\\\"document\\\":{\\\"name\\\":\\\"<ADD STRING VALUE>\\\",\\\"data\\\":\\\"<ADD STRING VALUE>\\\"},\\\"saltHex\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"contract\\\":{\\\"className\\\":\\\"<ADD STRING VALUE>\\\",\\\"addressHex\\\":\\\"<ADD STRING VALUE>\\\"}}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox-id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType, "{\"uuid\":\"<ADD
+            STRING VALUE>\",\"saltedDocuments\":[{\"document\":{\"name\":\"<ADD
+            STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD
+            STRING VALUE>\"}],\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox-id", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'sandbox-id': 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { uuid: '<ADD STRING VALUE>',
+                 saltedDocuments:
+                  [ { document: { name: '<ADD STRING VALUE>', data: '<ADD STRING VALUE>' },
+                      saltHex: '<ADD STRING VALUE>' } ],
+                 contract:
+                  { className: '<ADD STRING VALUE>',
+                    addressHex: '<ADD STRING VALUE>' } },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"uuid\":\"<ADD STRING VALUE>\",\"saltedDocuments\":[{\"document\":{\"name\":\"<ADD STRING VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD STRING VALUE>\"}],\"contract\":{\"className\":\"<ADD STRING VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox-id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"saltedDocuments\":[{\"document\":{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD STRING
+            VALUE>\"}],\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox-id': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox-id"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"saltedDocuments\":[{\"document\":{\"name\":\"<ADD STRING
+            VALUE>\",\"data\":\"<ADD STRING VALUE>\"},\"saltHex\":\"<ADD STRING
+            VALUE>\"}],\"contract\":{\"className\":\"<ADD STRING
+            VALUE>\",\"addressHex\":\"<ADD STRING VALUE>\"}}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/verifyGiven \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox-id: SOME_STRING_VALUE' \
+              --data '{"uuid":"<ADD STRING VALUE>","saltedDocuments":[{"document":{"name":"<ADD STRING VALUE>","data":"<ADD STRING VALUE>"},"saltHex":"<ADD STRING VALUE>"}],"contract":{"className":"<ADD STRING VALUE>","addressHex":"<ADD STRING VALUE>"}}'
+  /blockchain/document/retrieveThenVerify:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Blockchain
+      parameters:
+        - name: sandbox-id
+          description: The unique name of your Sandbox
+          schema:
+            default: ''
+            type: string
+          in: header
+          required: true
+          type: string
+        - name: body
+          schema:
+            $ref: '#/definitions/retrieveThenVerifyDocumentRequest'
+          in: body
+          required: true
+      responses:
+        '200':
+          description: |
+            OK
+          schema:
+            $ref: '#/definitions/retrieveThenVerifyDocumentResponse'
+      summary: Retrieve and then verify documents
+      description: >
+        Retrieve and then verify specific documents of a business transaction.
+        You should ask specific document names.
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox-id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"docnames\":[\"<ADD STRING VALUE>\"]}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("sandbox-id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"docnames\":[\"<ADD STRING VALUE>\"]}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify\"\n\n\tpayload := strings.NewReader(\"{\\\"uuid\\\":\\\"<ADD STRING VALUE>\\\",\\\"docnames\\\":[\\\"<ADD STRING VALUE>\\\"]}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox-id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType, "{\"uuid\":\"<ADD
+            STRING VALUE>\",\"docnames\":[\"<ADD STRING VALUE>\"]}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox-id", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 'sandbox-id': 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { uuid: '<ADD STRING VALUE>',
+                 docnames: [ '<ADD STRING VALUE>' ] },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"uuid\":\"<ADD STRING VALUE>\",\"docnames\":[\"<ADD STRING VALUE>\"]}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox-id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"uuid\":\"<ADD STRING VALUE>\",\"docnames\":[\"<ADD
+            STRING VALUE>\"]}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox-id': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox-id"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"uuid\":\"<ADD STRING
+            VALUE>\",\"docnames\":[\"<ADD STRING VALUE>\"]}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/blockchain/headers/v1/blockchain/document/retrieveThenVerify \
+              --header 'accept: application/json' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox-id: SOME_STRING_VALUE' \
+              --data '{"uuid":"<ADD STRING VALUE>","docnames":["<ADD STRING VALUE>"]}'
+definitions:
+  transactionStatusRequest:
+    description: The request body for transactionStatus
+    required:
+      - uuid
+    type: object
+    properties:
+      uuid:
+        description: A unique identifier for each transaction
+        type: string
+  transactionInfo: &ref_6
+    title: Root Type for transactionInfo
+    description: |
+      The information for a specific transaction
+    type: object
+    properties:
+      uuid:
+        type: string
+      receivedStamp:
+        type: string
+      status: &ref_0
+        title: Root Type for status
+        description: The status of a transaction on the blockchain
+        type: object
+        properties:
+          code:
+            format: int32
+            description: '1 for received, 2 for submitted, 101 for confirmed, 201 for failed'
+            type: integer
+          name:
+            type: string
+          message:
+            type: string
+          lastUpdatedStamp:
+            type: string
+        example:
+          code: 101
+          name: CONFIRMED_IN_ETHEREUM
+          message: Confirmed in ethereum
+          lastUpdatedStamp: '2019-05-16T11:45:05.906Z'
+      ethereumContract: &ref_5
+        title: Root Type for ethereumContract
+        description: The smart contract that the transaction was sent to
+        type: object
+        properties:
+          className:
+            type: string
+          addressHex:
+            description: Smart Contract's ethereum address
+            type: string
+        example:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      ethereumSubmission: &ref_1
+        title: Root Type for ethereumSubmission
+        description: ''
+        type: object
+        properties:
+          transactionHashHex:
+            description: The hash of the transaction as intended from the ethereum protocol
+            type: string
+          stamp:
+            type: string
+        example:
+          transactionHashHex: '0x04412d944fcfea2e03e9c4c4113a74820654227b8c3e269886a39b1c5e80644d'
+          stamp: '2019-05-16T11:45:05.906Z'
+      ethereumConfirmation: &ref_2
+        title: Root Type for ethereumConfirmation
+        description: ''
+        type: object
+        properties:
+          blockStamp:
+            type: string
+          blockNumber:
+            format: int32
+            type: integer
+          transactionStatus:
+            type: string
+        example:
+          blockStamp: '2019-05-16T11:45:05.906Z'
+          blockNumber: 6
+          transactionStatus: '0x1'
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      receivedStamp: '2019-05-16T11:45:05.905Z'
+      status:
+        code: 101
+        name: CONFIRMED_IN_ETHEREUM
+        message: Confirmed in ethereum
+        lastUpdatedStamp: '2019-05-16T11:45:05.906Z'
+      ethereumContract:
+        className: BtrxlogEthereumContract_v1
+        addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      ethereumSubmission:
+        transactionHashHex: '0x04412d944fcfea2e03e9c4c4113a74820654227b8c3e269886a39b1c5e80644d'
+        stamp: '2019-05-16T11:45:05.906Z'
+      ethereumConfirmation:
+        blockStamp: '2019-05-16T11:45:05.906Z'
+        blockNumber: 6
+        transactionStatus: '0x1'
+  status: *ref_0
+  ethereumSubmission: *ref_1
+  ethereumConfirmation: *ref_2
+  transactionLog:
+    title: Root Type for transactionLog
+    description: The transaction log
+    type: object
+    properties:
+      uuid:
+        description: uuid of the transaction
+        type: string
+      blockstamp:
+        type: string
+      digests:
+        description: The transformed documets that have been stored on the blockchain
+        type: array
+        items:
+          type: string
+      contract:
+        $ref: '#/definitions/contract'
+        description: The smart contract that the transaction was sent to
+        properties:
+          className:
+            type: string
+          addressHex:
+            type: string
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      blockstamp: '2019-05-16T11:45:05.906Z'
+      digests:
+        - n3UP0neplKgpwTkfaotfv0W7qKWyVfonziUX0PLpzr4=
+        - NA5d7Qev6KRbyCT7BBUTfHAb8TnEuXemvuy8uFkWHk
+        - 4i2NdwaUx38krHGi9AqgtqX3bLNTtmVhHX+ZSX/jC4o=
+        - qWkT4eZhxOVSE2zY2o5cju8Wuyr7ka0cRywRcvH3Wo0=
+        - T7d53HqXO2T+W4VLQdsr9VqAb9MiToZdNtb8Jr+C6mU=
+      contract:
+        className: BtrxlogEthereumContract_v1
+        addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+  registryResp:
+    title: Root Type for registryResp
+    description: ''
+    type: object
+    properties:
+      saltedDocuments:
+        description: A list of the salted documents
+        type: array
+        items:
+          $ref: '#/definitions/saltedDocument'
+      ethereumContract:
+        $ref: '#/definitions/ethereumContract'
+        description: The Smart Contract that the transaction was sent to
+        properties:
+          className:
+            type: string
+          addressHex:
+            type: string
+    example:
+      saltedDocuments:
+        - document:
+            name: req.field1
+            data: GR4501457684503004564000103433467
+          saltHex: '0x5f29e3a7602624273db0c47aad1ce5bc408df5b57fe460da4f281a9658e362ab'
+        - document:
+            name: req.field2
+            data: EUR
+          saltHex: '0x91efcc98155c4944c5bcecb72873fef8ca274cf39b9d32b82ba9b8b64e895cbc'
+        - document:
+            name: req.field3
+            data: '900'
+          saltHex: '0x6d64bd5bd9aa0e2650bea0e435da980bcb31a436917458cc2c692c04a15099eb'
+        - document:
+            name: resp.field4
+            data: success
+          saltHex: '0x6d94bf517dbe91204e2eb6ec862986f570588d3487c2160ab43f51247054ba8b'
+      ethereumContract:
+        className: BtrxlogEthereumContract_v1
+        addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+  documentVerification: &ref_7
+    title: Root Type for documentVerification
+    description: 'The document along with its salt, matching digest and verification outcome'
+    type: object
+    properties:
+      saltedDocument: &ref_3
+        title: Root Type for saltedDocument
+        description: A document along with its salt
+        type: object
+        properties:
+          document: &ref_4
+            title: Root Type for document
+            description: A document that has been stored on the blockchain
+            type: object
+            properties:
+              name:
+                type: string
+              data:
+                type: string
+            example:
+              name: req.field1
+              data: GR4501457684503004564000103433467
+          saltHex:
+            type: string
+        example:
+          document:
+            name: req.field1
+            data: GR4501457684503004564000103433467
+          saltHex: '0x5f29e3a7602624273db0c47aad1ce5bc408df5b57fe460da4f281a9658e362ab'
+      matchingDigestHex:
+        description: The transformed document that has been stored on the blockchain
+        type: string
+      verificationOutcome:
+        description: The result of the verification process
+        type: string
+    example:
+      saltedDocument:
+        document:
+          name: req.field1
+          data: GR4501457684503004564000103433467
+        saltHex: '0x5f29e3a7602624273db0c47aad1ce5bc408df5b57fe460da4f281a9658e362ab'
+      matchingDigestHex: '0x14d03977b41ebfa2916f2093ec10544df1c06fc4e712e5de9afbb2f2e1645879'
+      verificationOutcome: PASSED
+  saltedDocument: *ref_3
+  document: *ref_4
+  ethereumContract: *ref_5
+  contract: &ref_8
+    title: Root Type for contract
+    description: The smart contract that the transaction was sent to
+    type: object
+    properties:
+      className:
+        type: string
+      addressHex:
+        description: Smart Contract's ethereum address
+        type: string
+    example:
+      className: BtrxlogEthereumContract_v1
+      addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+  createSandbox:
+    title: Root Type for createSandbox
+    description: The root of the createSandbox type's schema.
+    type: object
+    properties:
+      sandboxId:
+        type: string
+    example:
+      sandboxId: TestSandbox
+  SandboxDataModel:
+    title: Root Type for SandboxDataModel
+    description: The root of the SandboxDataModel type's schema.
+    type: object
+    properties:
+      sandboxId:
+        type: string
+      blockchain:
+        description: List of transactionInfo obects
+        type: array
+        items: *ref_6
+      verificationData:
+        description: List of documentVerification objects
+        type: array
+        items: *ref_7
+    example:
+      sandboxId: blockchainSandbox
+      blockchain:
+        - uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+          receivedStamp: '2019-05-21T12:41:08.453Z'
+          status:
+            code: 101
+            name: CONFIRMED_IN_ETHEREUM
+            message: Confirmed in ethereum
+            lastUpdatedStamp: '2019-05-21T12:41:08.453Z'
+          ethereumContract:
+            className: BtrxlogEthereumContract_v1
+            addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+          ethereumSubmission:
+            transactionHashHex: '0x04412d944fcfea2e03e9c4c4113a74820654227b8c3e269886a39b1c5e80644d'
+            stamp: '2019-05-21T12:41:08.453Z'
+          ethereumConfirmation:
+            blockStamp: '2019-05-21T12:41:08.453Z'
+            blockNumber: 6
+            transactionStatus: '0x1'
+        - uuid: 017fc522-294b-4bdb-a7c9-d3b539c09316
+          receivedStamp: '2019-05-21T12:41:08.453Z'
+          status:
+            code: 101
+            name: CONFIRMED_IN_ETHEREUM
+            message: Confirmed in ethereum
+            lastUpdatedStamp: '2019-05-21T12:41:08.453Z'
+          ethereumContract:
+            className: BtrxlogEthereumContract_v1
+            addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+          ethereumSubmission:
+            transactionHashHex: '0xd9e67eeec45c2aff435835ba23e145d9cfcea5da1fcdf90854d27493b2b27c6f'
+            stamp: '2019-05-21T12:41:08.453Z'
+          ethereumConfirmation:
+            blockStamp: '2019-05-21T12:41:08.453Z'
+            blockNumber: 152
+            transactionStatus: '0x1'
+        - uuid: b1cda483-2238-4aa1-b179-4df5fa289823
+          receivedStamp: '2019-05-21T12:41:08.453Z'
+          status:
+            code: 101
+            name: CONFIRMED_IN_ETHEREUM
+            message: Confirmed in ethereum
+            lastUpdatedStamp: '2019-05-21T12:41:08.453Z'
+          ethereumContract:
+            className: BtrxlogEthereumContract_v1
+            addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+          ethereumSubmission:
+            transactionHashHex: '0xaa9611d72b89cce04a1a6c61d14c2972f5a9464bc51e746a018f6c515af3c00e'
+            stamp: '2019-05-21T12:41:08.453Z'
+          ethereumConfirmation:
+            blockStamp: '2019-05-21T12:41:08.453Z'
+            blockNumber: 2322
+            transactionStatus: '0x1'
+        - uuid: 51b30523-7f58-46d0-a8b7-65e0e17a0465
+          receivedStamp: '2019-05-21T12:41:08.453Z'
+          status:
+            code: 2
+            name: SUBMITTED_TO_ETHEREUM
+            message: Submitted to ethereum
+            lastUpdatedStamp: '2019-05-21T12:41:08.453Z'
+          ethereumContract:
+            className: BtrxlogEthereumContract_v1
+            addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+          ethereumSubmission:
+            transactionHashHex: '0x7a8d839a78a329e1aaca2cd293b4617c2c1ae57712a79c630a316e3dfe25fac3'
+            stamp: '2019-05-21T12:41:08.453Z'
+        - uuid: 4aad6585-5313-4f67-a908-5577b8f7279c
+          receivedStamp: '2019-05-21T12:41:08.453Z'
+          status:
+            code: 1
+            name: RECEIVED
+            message: Received
+            lastUpdatedStamp: '2019-05-21T12:41:08.453Z'
+          ethereumContract:
+            className: BtrxlogEthereumContract_v1
+            addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+          ethereumSubmission:
+            transactionHashHex: '0xe06b4b8af20e0616460e577a2109f29bb3b98667b78aa6435371af58e3251e3c'
+            stamp: '2019-05-21T12:41:08.453Z'
+      verificationData:
+        - saltedDocument:
+            document:
+              name: req.field1
+              data: GR4501457684503004564000103433467
+            saltHex: '0x5f29e3a7602624273db0c47aad1ce5bc408df5b57fe460da4f281a9658e362ab'
+          matchingDigestHex: '0x14d03977b41ebfa2916f2093ec10544df1c06fc4e712e5de9afbb2f2e1645879'
+          verificationOutcome: PASSED
+        - saltedDocument:
+            document:
+              name: req.field2
+              data: EUR
+            saltHex: '0x91efcc98155c4944c5bcecb72873fef8ca274cf39b9d32b82ba9b8b64e895cbc'
+          matchingDigestHex: '0xe22d8d770694c77f24ac71a2f40aa0b6a5f76cb353b665611d7f99497fe30b8a'
+          verificationOutcome: PASSED
+        - saltedDocument:
+            document:
+              name: req.field3
+              data: '900'
+            saltHex: '0x6d64bd5bd9aa0e2650bea0e435da980bcb31a436917458cc2c692c04a15099eb'
+          matchingDigestHex: '0xa96913e1e661c4e552136cd8da8e5c8eef16bb2afb91ad1c472c1172f1f75a8d'
+          verificationOutcome: PASSED
+        - saltedDocument:
+            document:
+              name: resp.field4
+              data: success
+            saltHex: '0x6d94bf517dbe91204e2eb6ec862986f570588d3487c2160ab43f51247054ba8b'
+          matchingDigestHex: '0x4fb779dc7a973b64fe5b854b41db2bf55a806fd3224e865d36d6fc26bf82ea65'
+          verificationOutcome: PASSED
+  CreateSandboxRequest:
+    title: Root Type for CreateSandboxRequest
+    description: The root of the CreateSandboxRequest type's schema.
+    type: object
+    properties:
+      sandboxId:
+        type: string
+    example:
+      sandboxΙd: string
+  verifyGivenDocumentRequest:
+    title: Root Type for verifyGivenDocumentRequest
+    description: The root of the verifyGivenDocumentRequest type's schema.
+    type: object
+    properties:
+      uuid:
+        type: string
+      saltedDocuments:
+        type: array
+        items: *ref_3
+      contract: *ref_8
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      saltedDocuments:
+        - document:
+            name: req.field1
+            data: GR4501457684503004564000103433467
+          saltHex: '0x75c26a1f42c279468805e8ad6cef1284ee5f390d917d56745bb13f77e66c5aae'
+        - document:
+            name: req.field2
+            data: EUR
+          saltHex: '0x29d6daa9e498e4811c709eff91bf28603f4bad9e7df8fc598d3281fb2e844043'
+      contract:
+        className: BtrxlogEthereumContract_v1
+        addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+  ethereumConnectionConfig:
+    title: Root Type for ethereumConnectionConfig
+    description: The root of the ethereumConnectionConfig type's schema.
+    type: object
+    properties:
+      clientUrl:
+        type: string
+      accountPrivateKey:
+        type: string
+    example: |-
+      {
+          "clientUrl": "http://172.36.79.57:8545/",
+          "accountPrivateKey": "0x0000000000000000000000000000000000000000000000000000000000000000"
+      }
+  retrieveThenVerifyDocumentRequest:
+    title: Root Type for retrieveThenVerifyDocument
+    description: The root of the retrieveThenVerifyDocument type's schema.
+    type: object
+    properties:
+      uuid:
+        type: string
+      docnames:
+        type: array
+        items:
+          type: string
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      docnames:
+        - req.field1
+        - req.field2
+  retrieveThenVerifyTransactionRequest:
+    title: Root Type for retrieveThenVerifyTransactionRequest
+    description: The root of the retrieveThenVerifyTransactionRequest type's schema.
+    type: object
+    properties:
+      uuid:
+        type: string
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+  retrieveThenVerifyTransactionResponse:
+    title: Root Type for retrieveThenVerifyResponse
+    description: The root of the retrieveThenVerifyResponse type's schema.
+    type: object
+    properties:
+      saltedTransaction:
+        $ref: '#/definitions/saltedTransaction'
+        properties:
+          uuid:
+            type: string
+          saltHex:
+            type: string
+          documents:
+            type: array
+            items: {}
+      ethereumContract:
+        $ref: '#/definitions/ethereumContract'
+        properties:
+          className:
+            type: string
+          addressHex:
+            type: string
+      transactionLog:
+        $ref: '#/definitions/transactionLog'
+        properties:
+          uuid:
+            type: string
+          blockstamp:
+            type: string
+          digests:
+            type: array
+            items: {}
+          contract:
+            type: object
+            properties:
+              className:
+                type: string
+              addressHex:
+                type: string
+      transactionVerification:
+        $ref: '#/definitions/transactionVerification'
+        properties:
+          matchingDigestHex:
+            type: string
+          verificationOutcome:
+            type: string
+    example:
+      saltedTransaction:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        saltHex: '0xc20388d7d3bb09a9cea7cb19d6dc26a50fb1e4492a1db6afb6be5a3b55eb1c4d'
+        documents:
+          - name: req.field2
+            data: EUR
+          - name: req.field1
+            data: GR4501457684503004564000103433467
+          - name: req.field3
+            data: '900'
+          - name: resp.field4
+            data: success
+      ethereumContract:
+        className: BtrxlogEthereumContract_v1
+        addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      transactionLog:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        blockstamp: '2019-06-19T11:18:29Z'
+        digests:
+          - n3UP0neplKgpwTkfaotfv0W7qKWyVfonziUX0PLpzr4=
+          - NA5d7Qev6KRbyCT7BBUTfHAb8TnEuXemvuy8uFkWHk
+          - 4i2NdwaUx38krHGi9AqgtqX3bLNTtmVhHX+ZSX/jC4o=
+          - qWkT4eZhxOVSE2zY2o5cju8Wuyr7ka0cRywRcvH3Wo0=
+          - T7d53HqXO2T+W4VLQdsr9VqAb9MiToZdNtb8Jr+C6mU=
+        contract:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      transactionVerification:
+        matchingDigestHex: '0xd087bd45f91292e8faa92569ad8dc723c770561ed99de55149ca8e6d74b84508'
+        verificationOutcome: PASSED
+  saltedTransaction:
+    title: Root Type for saltedTransaction
+    description: The root of the saltedTransaction type's schema.
+    type: object
+    properties:
+      uuid:
+        type: string
+      saltHex:
+        type: string
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/document'
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      saltHex: '0x04412d944fcfea2e03e9c4c4113a74820654227b8c3e269886a39b1c5e123456'
+      documents:
+        - name: req.field2
+          data: EUR
+        - name: req.field1
+          data: GR4501457684503004564000103433467
+  transactionVerification:
+    title: Root Type for transactionVerification
+    description: The root of the transactionVerification type's schema.
+    type: object
+    properties:
+      clientUrl:
+        type: string
+      accountPrivateKey:
+        type: string
+    example:
+      clientUrl: 'http://172.36.79.57:8545/'
+      accountPrivateKey: '0x0000000000000000000000000000000000000000000000000000000000000000'
+  verifyGivenDocumentResponse:
+    title: Root Type for verifyGivenDocumentResponse
+    description: The root of the verifyGivenDocumentResponse type's schema.
+    type: object
+    properties:
+      documentVerifications:
+        type: array
+        items:
+          $ref: '#/definitions/documentVerification'
+      btrxlogResp:
+        $ref: '#/definitions/transactionLog'
+        properties:
+          uuid:
+            type: string
+          blockstamp:
+            type: string
+          digests:
+            type: array
+            items: {}
+          contract:
+            type: object
+            properties:
+              className:
+                type: string
+              addressHex:
+                type: string
+    example:
+      btrxlogResp:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        blockStamp: '2019-06-19T09:07:46Z'
+        digests:
+          - LHqe/N9GjGa0uUTjtkAn15ptb53dyAT6lw5RfCZX+Q8=
+          - 5ituhk3utEuI3mjsObia5IeXllFKTU7BCSG9CsEIYPU=
+          - 3+BK+EeNmvW3uU4F603uQ/rBapGZOXTxoKHtZc5JFPw=
+          - aTnDx6+K7vr7dOe8qdPV75oxmCQT5QOA/9QPas929DY=
+          - d3Dm4IyZ2zs7vwiAKIOGXTbzzPclDIXDyPddybtFJ6U=
+        contract:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      documentVerifications:
+        - saltedDocument:
+            document:
+              name: req.field1
+              data: GR4501457684503004564000103433467
+            saltHex: '0x59d80613d546dc42bee474379486cfd4f176f40445118599761f976702b281b0'
+          matchingDigestHex: '0xe62b6e864deeb44b88de68ec39b89ae4879796514a4d4ec10921bd0ac10860f5'
+          verificationOutcome: PASSED
+        - saltedDocument:
+            document:
+              name: req.field2
+              data: EUR
+            saltHex: '0x1856a3d12c471c3daba2d61c7cb9377fd6e03e0dee63ec2dc5bd52b39dafea33'
+          matchingDigestHex: '0xdfe04af8478d9af5b7b94e05eb4dee43fac16a91993974f1a0a1ed65ce4914fc'
+          verificationOutcome: PASSED
+  verifyGivenTransactionRequest:
+    title: Root Type for verifyGivenTransactionRequest
+    description: The root of the verifyGivenTransactionRequest type's schema.
+    type: object
+    properties:
+      uuid:
+        type: string
+      documents:
+        type: array
+        items: *ref_4
+      saltHex:
+        type: string
+      contract: *ref_8
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      documents:
+        - name: req.field1
+          data: GR4501457684503004564000103433467
+        - name: req.field2
+          data: EUR
+        - name: req.field3
+          data: '900'
+        - name: resp.field4
+          data: success
+      saltHex: '0xc20388d7d3bb09a9cea7cb19d6dc26a50fb1e4492a1db6afb6be5a3b55eb1c4d'
+      contract:
+        className: BtrxlogEthereumContract_v1
+        addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+  transactionStatusResponse:
+    title: Root Type for transactionStatusResponse
+    description: 'The response of the transaction status. '
+    type: object
+    properties:
+      transactionInfo:
+        $ref: '#/definitions/transactionInfo'
+        description: The transaction's information
+        properties:
+          uuid:
+            type: string
+          receivedStamp:
+            type: string
+          status:
+            type: object
+            properties:
+              code:
+                format: int32
+                type: integer
+              name:
+                type: string
+              message:
+                type: string
+              lastUpdatedStamp:
+                type: string
+          ethereumContract:
+            type: object
+            properties:
+              className:
+                type: string
+              addressHex:
+                type: string
+          ethereumSubmission:
+            type: object
+            properties:
+              transactionHashHex:
+                type: string
+              stamp:
+                type: string
+          ethereumConfirmation:
+            type: object
+            properties:
+              blockStamp:
+                type: string
+              blockNumber:
+                format: int32
+                type: integer
+              transactionStatus:
+                type: string
+    example:
+      transactionStatus:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        receivedStamp: '2019-06-19T11:18:21.983Z'
+        status:
+          code: 101
+          name: CONFIRMED_IN_ETHEREUM
+          message: Confirmed in ethereum
+          lastUpdatedStamp: '2019-06-19T11:18:29Z'
+        ethereumContract:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+        ethereumSubmission:
+          transactionHashHex: '0x27eb332c010f41cc58eff2a754e5595e170ea63fc1751b8beb6eda1caff3ceef'
+          stamp: '2019-06-19T11:18:22.505Z'
+        ethereumConfirmation:
+          blockStamp: '2019-06-19T11:18:29Z'
+          blockNumber: 6
+          transactionIndex: 0
+          transactionStatus: '0x1'
+  retrieveThenVerifyDocumentResponse:
+    title: Root Type for retrieveThenVerifyDocumentResponse
+    description: "The root of the retrieveThenVerifyDocumentResponse type's schema.\r\n"
+    type: object
+    properties:
+      registryResp:
+        $ref: '#/definitions/registryResp'
+        properties:
+          saltedDocuments:
+            type: array
+            items:
+              type: object
+              properties:
+                document:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    data:
+                      type: string
+                saltHex:
+                  type: string
+          ethereumContract:
+            type: object
+            properties:
+              className:
+                type: string
+              addressHex:
+                type: string
+      transactionLog:
+        $ref: '#/definitions/transactionLog'
+        properties:
+          uuid:
+            type: string
+          blockstamp:
+            format: date-time
+            type: string
+          digests:
+            type: array
+            items:
+              type: string
+          contract:
+            type: object
+            properties:
+              className:
+                type: string
+              addressHex:
+                type: string
+      documentVerifications:
+        type: array
+        items:
+          $ref: '#/definitions/documentVerification'
+    example:
+      registryResp:
+        saltedDocuments:
+          - document:
+              name: req.field1
+              data: GR4501457684503004564000103433467
+            saltHex: '0x5f29e3a7602624273db0c47aad1ce5bc408df5b57fe460da4f281a9658e362ab'
+          - document:
+              name: req.field2
+              data: EUR
+            saltHex: '0x91efcc98155c4944c5bcecb72873fef8ca274cf39b9d32b82ba9b8b64e895cbc'
+        ethereumContract:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      transactionLog:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        blockstamp: '2019-06-19T11:18:29Z'
+        digests:
+          - n3UP0neplKgpwTkfaotfv0W7qKWyVfonziUX0PLpzr4=
+          - NA5d7Qev6KRbyCT7BBUTfHAb8TnEuXemvuy8uFkWHk
+          - 4i2NdwaUx38krHGi9AqgtqX3bLNTtmVhHX+ZSX/jC4o=
+          - qWkT4eZhxOVSE2zY2o5cju8Wuyr7ka0cRywRcvH3Wo0=
+          - T7d53HqXO2T+W4VLQdsr9VqAb9MiToZdNtb8Jr+C6mU=
+        contract:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      documentVerifications:
+        - saltedDocument:
+            document:
+              name: req.field1
+              data: GR4501457684503004564000103433467
+            saltHex: '0x5f29e3a7602624273db0c47aad1ce5bc408df5b57fe460da4f281a9658e362ab'
+          matchingDigestHex: '0x14d03977b41ebfa2916f2093ec10544df1c06fc4e712e5de9afbb2f2e1645879'
+          verificationOutcome: PASSED
+        - saltedDocument:
+            document:
+              name: req.field2
+              data: EUR
+            saltHex: '0x91efcc98155c4944c5bcecb72873fef8ca274cf39b9d32b82ba9b8b64e895cbc'
+          matchingDigestHex: '0xe22d8d770694c77f24ac71a2f40aa0b6a5f76cb353b665611d7f99497fe30b8a'
+          verificationOutcome: PASSED
+  verifyGivenTransactionResponse:
+    title: Root Type for verifyGivenTransactionResponse
+    description: The root of the verifyGivenTransactionResponse type's schema.
+    type: object
+    properties:
+      btrxlogResp:
+        $ref: '#/definitions/transactionLog'
+        properties:
+          uuid:
+            type: string
+          blockStamp:
+            format: date-time
+            type: string
+          digests:
+            type: array
+            items:
+              type: string
+          contract:
+            type: object
+            properties:
+              className:
+                type: string
+              addressHex:
+                type: string
+      btrxVerification:
+        $ref: '#/definitions/btrxVerification'
+        properties:
+          uuid:
+            type: string
+          matchingDigestHex:
+            type: string
+          verificationOutcome:
+            type: string
+    example:
+      btrxlogResp:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        blockStamp: '2019-06-19T11:18:29Z'
+        digests:
+          - 0Ie9RfkSkuj6qSVprY3HI8dwVh7ZneVRScqObXS4RQg=
+          - IueC+Q10d2uWcd8AQYPoXDjGFqmHbPzO0HFRcbQzEYU=
+          - dFvI4lTV0m0XECS7fSSxajmkdSKNFEmPW4UaGArtI40=
+          - EbPIr/2GJ+cPNgIR+pCCY8TbEBTJe7OU2deR6uYkYEQ=
+          - 6EtCcKyip1eViGzFjF3mRPV3qJZg5tWS/bGlDuZERSQ=
+        contract:
+          className: BtrxlogEthereumContract_v1
+          addressHex: '0xbd83a3a6d0709b02eeb32f923d62bfe3e5cb59f5'
+      btrxVerification:
+        uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+        matchingDigestHex: '0xd087bd45f91292e8faa92569ad8dc723c770561ed99de55149ca8e6d74b84508'
+        verificationOutcome: PASSED
+  btrxVerification:
+    title: Root Type for btrxVerification
+    description: The verification of a business transaction.
+    type: object
+    properties:
+      uuid:
+        type: string
+      matchingDigestHex:
+        type: string
+      verificationOutcome:
+        type: string
+    example:
+      uuid: ba534cc4-359f-4945-bcb8-1dc2997cb194
+      matchingDigestHex: '0xd087bd45f91292e8faa92569ad8dc723c770561ed99de55149ca8e6d74b84508'
+      verificationOutcome: PASSED
+securityDefinitions:
+  Client-Id:
+    type: apiKey
+    description: Application's Id
+    name: Client-Id
+    in: header
+security:
+  - Client-Id: []

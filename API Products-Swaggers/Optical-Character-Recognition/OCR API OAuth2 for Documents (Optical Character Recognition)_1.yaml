@@ -1,0 +1,1866 @@
+swagger: '2.0'
+info:
+  version: v1.3
+  title: OCR API for Documents (Optical Character Recognition)
+  description: "## Functionality at a glance  \n\nHere you will find guidelines for the interaction with the OCR API. By using the OCR API, any user can get information on various document types.  \n\nBelow you will find details about our OCR API and the complete list of the available endpoints. This sandbox API enables a user to:  \n1. Get information on the document types that the OCR API can recognize. At the moment the fields of the following documents are extracted: \n    1. Passport (issuing countries: Greece, Cyprus, Albania, USA)  \n    2. Greek driving licence  \n    3. Greek ID \n    4. Greek tax form  \n    5. Greek energy bill (issued by DEH)  \n    6. Greek water bill (issued by EYDAP)  \n2. Upload a document and get the document's recognized data. \n\n  ## Quick Getting Started  \n       \n  1. Login/Register to the NBG Developer Portal       \n  2. Go to \"APPS\" and  click \"Create New App\"       \n  3. Go to \"API PRODUCTS\" and select an API       \n  4. Click \"START USING THIS API\", choose your app and click \"SUBSCRIBE\"       \n  5. Get an Access Token using the Access Token Flow and the API scopes provided in the Authentication and Authorization (OAuth2) section below       \n  6. Create a Sandbox   \n  7. Play with the API\n\n \n\n  ## Authentication and Authorization (OAuth2)  \n This API version uses the OAuth2 protocol for authentication and authorization, which means that a Bearer (access token) should be acquired. An access token can be retrieved using the client_id and client_secret of the APP that you created and subscribed in this API. \n The scopes are defined below: \n\n **Sandbox Scopes:**\n >sandbox-ocrdocument-api-v1-3 \n\n **Production Scopes:**\n >ocrdocument-api-v1-3 \n\n **Token Endpoint:**\n >https://my.nbg.gr/identity/connect/token\n\n\n## Create your Sandbox  \n\nSandboxes provide a simple way of testing APIs without any real impact, meaning that no personal or financial data is used.  \n\n**Step One: Create your first Sandbox Application** \n\nCreate a new Sandbox application by invoking the POST /sandbox endpoint.This call will generate a new Sandbox with a unique sandbox_id.  \n\n**Important!** Before proceeding save the sandbox id you just created.    \n\nWhen you create a sandbox, sandbox specific data are generated as sample data. \n\nThe following HTTP **header parameters** are required for every call (except for sandbox operations):  \n1.\t sandbox_id  \n2.\t application_id \n3.\t Authorization \n\n**Sandbox Operations:**    \n1.\tCreate a sandbox: POST /sandbox    \n2.\tExport a sandbox: GET /sandbox/{sandbox_id}   \n3.\tImport a sandbox: PUT /sandbox/{sandbox_id}   \n4.\tDelete a sandbox: DELETE /sandbox/{sandbox_id}  \n\n[Sandbox Postman Collection](https://github.com/myNBGcode/PostmanCollections/tree/master/OCR%20API) \n\n\n ## Important notes: \n Request headers \n1. Each request MUST have the following info:\n **sandbox_id, request_id** \n\n\n ## Start Testing \n Once you have your sandbox_id, you can start invoking the rest of the operations by providing the mandatory http header sandbox_id and the other required information on the “request body payload” (e.g. “userId”).\n ## Error Codes:   \n1. Error 1.1.0 - Only POST method is allowed   \n2. Error 1.1.1, 2.1.2 - Header Error : Header is NULL   \n3. Error 1.1.3 - Header Error : Application is NULL   \n4. Error 1.2 - Model state is invalid   \n5. Error C.0.0, C.0.1 - Action not allowed for CORPORATE users   \n6. Error 2.1.1 - Request body is NULL   \n7. Error 2.2.1 - UserId is NULL   \n8. Error 2.2.3 - Inconsistent User ID \n9. Error 3.1.1 - header.ID/header.application must be valid GUIDs\n\n\n\nCreated by **NBG**. \n\nSee more at https://www.nbg.gr/\n\n # Entities \n\n Below, the main entities are documented.\n <a name=ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.OcrUploadRequest></a> \n## ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.OcrUploadRequest \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| header| -| object|\n| payload| Ocr Upload Request| object|\n\n <a name=ibank.Hosting.WebApi.RequestHeader></a> \n## ibank.Hosting.WebApi.RequestHeader \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| ID| -| string|\n| application| -| string|\n| bank| -| string|\n| hostSession| -| string|\n| channel| -| string|\n| customer| -| number|\n| logitude| -| number|\n| latitude| -| number|\n| go4moreMember| -| boolean|\n| TAN| -| string|\n\n <a name=OCRDocument.Interfaces.OcrUploadRequest></a> \n## OCRDocument.Interfaces.OcrUploadRequest \nOcr Upload Request \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| declaredDocumentType| The type of the document (e.g. 1782d81f-5ac0-4a71-ae44-97cf1b6f348d)| string|\n| initialDocument| The document that is sent for OCR (base64 encoding). Maximum size 5MB| string|\n| initialDocumentFormat| The document format (e.g. jpg)| string|\n| initialDocumentName| The document name (e.g. myDocument).| string|\n| isMultiPage| If the document has multiple pages| boolean|\n\n <a name=ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.OcrUploadResponse></a> \n## ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.OcrUploadResponse \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| payload | Entity | <details><summary>[OCRDocument.Interfaces.OcrUploadResponse](#OCRDocument.Interfaces.OcrUploadResponse)</summary><ul><li>documentProximity [string]</li> <li>documentType [string]</li> <li>extractedDocument [string]</li> <li>extractedDocumentFormat [string]</li> <li>extractedDocumentType [string]</li> <li>initialDocumentFormat [string]</li> <li>items [array[[OCRDocument.Interfaces.ItemField](#OCRDocument.Interfaces.ItemField)]]</li> </ul></details> | \n| exception | Entity | <details><summary>[bUtility.ResponseMessage](#bUtility.ResponseMessage)</summary><ul><li>id [string]</li> <li>code [string]</li> <li>desc [string]</li> <li>sev [string]</li> <li>cat [string]</li> </ul></details> | \n| messages| -| array[[bUtility.ResponseMessage](#bUtility.ResponseMessage)]|\n| executionTime| -| number|\n\n <a name=OCRDocument.Interfaces.OcrUploadResponse></a> \n## OCRDocument.Interfaces.OcrUploadResponse \nOcr Upload Response \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| documentProximity| The confidence value of the document contents recognition| string|\n| documentType| The type of the document| string|\n| extractedDocument| The content of the returned document| string|\n| extractedDocumentFormat| The returned document format (e.g. tif)| string|\n| extractedDocumentType| The type of the returned document| string|\n| initialDocumentFormat| The format of the initial document (e.g. pdf)| string|\n| items| The list of extracted items| array[[OCRDocument.Interfaces.ItemField](#OCRDocument.Interfaces.ItemField)]|\n\n <a name=bUtility.ResponseMessage></a> \n## bUtility.ResponseMessage \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| id| -| string|\n| code| -| string|\n| desc| -| string|\n| sev| -| string|\n| cat| -| string|\n\n <a name=OCRDocument.Interfaces.ItemField></a> \n## OCRDocument.Interfaces.ItemField \nThe items that are extracted from OCR \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| propertyName| The name of the property (for example \"Greek_Sur_Name\")| string|\n| propertyValue| The value of the property (for example \"PAPADOPOULOS\")| string|\n| proximity| The confidence value of the character recognition (for example \"8,5\")| string|\n| type| The type of the item (for example \"string\")| string|\n| wordProximity| The confidence value of the word recognition (for example \"9,00\")| string|\n\n <a name=ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.GetInfoRequest></a> \n## ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.GetInfoRequest \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| header| -| object|\n| payload| Get info request| object|\n\n <a name=OCRDocument.Interfaces.GetInfoRequest></a> \n## OCRDocument.Interfaces.GetInfoRequest \nGet info request \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| documentTypeId| The typeId of the document to get information about (for example about \"passports\" the documentTypeId ='1cc5088d-2e92-41e6-b012-62dd0200bf16')| string|\n\n <a name=ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.GetInfoResponse></a> \n## ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.GetInfoResponse \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| payload | Entity | <details><summary>[OCRDocument.Interfaces.GetInfoResponse](#OCRDocument.Interfaces.GetInfoResponse)</summary><ul><li>documents [array[[OCRDocument.Interfaces.AvailableDoc](#OCRDocument.Interfaces.AvailableDoc)]]</li> <li>generalInfo [string]</li> </ul></details> | \n| exception | Entity | <details><summary>[bUtility.ResponseMessage](#bUtility.ResponseMessage)</summary><ul><li>id [string]</li> <li>code [string]</li> <li>desc [string]</li> <li>sev [string]</li> <li>cat [string]</li> </ul></details> | \n| messages| -| array[[bUtility.ResponseMessage](#bUtility.ResponseMessage)]|\n| executionTime| -| number|\n\n <a name=OCRDocument.Interfaces.GetInfoResponse></a> \n## OCRDocument.Interfaces.GetInfoResponse \nGet InfoResponse \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| documents| -| array[[OCRDocument.Interfaces.AvailableDoc](#OCRDocument.Interfaces.AvailableDoc)]|\n| generalInfo| Returns general information about the document| string|\n\n <a name=OCRDocument.Interfaces.AvailableDoc></a> \n## OCRDocument.Interfaces.AvailableDoc \nRetuns the documents that can be recognized \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| id| The id of the document| string|\n| name| The name of the document (for example \"passport\")| string|\n| recognizeFields| The list of fields that can be recognized| array[[OCRDocument.Interfaces.RecognizeField](#OCRDocument.Interfaces.RecognizeField)]|\n| returnDocTypes| The returned document types| array|\n| recognizeFormats| The returned recognized formats| array|\n\n <a name=OCRDocument.Interfaces.RecognizeField></a> \n## OCRDocument.Interfaces.RecognizeField \nThe fields that can be recognized \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| name| The name of the field| string|\n| type| The type of the field| string|\n| description| The description of the field| string|\n\n <a name=ocrdocument.sandbox.types.SandboxRequest></a> \n## ocrdocument.sandbox.types.SandboxRequest \nCreate sandbox request \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| sandboxId| Sandbox ID| string|\n\n <a name=ibank.Hosting.WebApi.Response.ocrdocument.sandbox.types.SandboxDataModel></a> \n## ibank.Hosting.WebApi.Response.ocrdocument.sandbox.types.SandboxDataModel \n\n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| payload | Entity | <details><summary>[ocrdocument.sandbox.types.SandboxDataModel](#ocrdocument.sandbox.types.SandboxDataModel)</summary><ul><li>SandboxID [string]</li> <li>Documents [array]</li> </ul></details> | \n| exception | Entity | <details><summary>[bUtility.ResponseMessage](#bUtility.ResponseMessage)</summary><ul><li>id [string]</li> <li>code [string]</li> <li>desc [string]</li> <li>sev [string]</li> <li>cat [string]</li> </ul></details> | \n| messages| -| array[[bUtility.ResponseMessage](#bUtility.ResponseMessage)]|\n| executionTime| -| number|\n\n <a name=ocrdocument.sandbox.types.SandboxDataModel></a> \n## ocrdocument.sandbox.types.SandboxDataModel \nSandbox data model \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| SandboxID| Sandbox unique identifier. E.g MySandbox| string|\n| Documents| List of sandbox Documents| array|\n\n <a name=ocrdocument.sandbox.types.SandboxDocument></a> \n## ocrdocument.sandbox.types.SandboxDocument \nSandbox document \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| DocumentType| The type of the document| string|\n| DocumentProximity| The proximity of the document| string|\n| ExtractedDocument| The Document returned by the OCR API| string|\n| ExtractedDocumentFormat| The returned document format (e.g. tif)| string|\n| ExtractedDocumentType| The type of the document according to OCR| string|\n| Items| The items that are extracted from OCR according to the initial document| array|\n| InitialDocumentFormat| The format of the initial document| string|\n\n <a name=ocrdocument.sandbox.types.SandboxField></a> \n## ocrdocument.sandbox.types.SandboxField \nThe items that are extracted from OCR \n\n### Attributes \n\n| Name| Description| Values|\n| -----| -----| -----|\n| PropertyName| The name of the property (for example \"Greek_Sur_Name\")| string|\n| PropertyValue| The value of the property (for example \"PAPADOPOULOS\")| string|\n| Proximity| The proximity of the item (for example \"8,5\")| string|\n| Type| The type of the item (for example \"string\")| string|\n| WordProximity| The word proximity of the item (for example \"9,00\")| string|\n"
+  contact:
+    email: developer@nbg.gr
+host: apis.nbg.gr
+basePath: /sandbox/ocr/oauth2/v1.3
+schemes:
+  - https
+paths:
+  /OcrDocument/uploadDocument:
+    post:
+      tags:
+        - OcrDocument
+      summary: Upload Document
+      description: "The user can upload a document with maximum size of 5MB for OCR by declaring its document type. The POST */OcrDocument/getInfo* endpoint provides the available document types. From the */OcrDocument/getInfo* response copy *documents.id* that corresponds to the document type you want to upload and then fill \"declaredDocumentType\" with its value  as shown below. \r\n\r\n \r\nSample request:\r\n \r\n    POST /uploadDocument \r\n    {\r\n      \"declaredDocumentType\": \"1cc5088d-2e92-41e6-b012-62dd0200bf16\", \r\n      \"initialDocument\": \"dHJ5IHRoaXM=\", \r\n      \"initialDocumentFormat\" : \"JPG\", \r\n      \"initialDocumentName\" : \"passport\", \r\n      \"isMultiPage\" : \"false\" \r\n    }"
+      operationId: OcrDocument_uploadDocument
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.OcrUploadRequest
+        - name: sandbox_id
+          in: header
+          description: Sandbox ID
+          required: true
+          type: string
+          default: ''
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.OcrUploadResponse
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS,
+            "{\"header\":{\"ID\":\"<ADD STRING VALUE>\",\"application\":\"<ADD
+            STRING VALUE>\",\"bank\":\"<ADD STRING
+            VALUE>\",\"hostSession\":\"<ADD STRING VALUE>\",\"channel\":\"<ADD
+            STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"declaredDocumentType\":\"<ADD STRING
+            VALUE>\",\"initialDocument\":\"<ADD STRING
+            VALUE>\",\"initialDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"initialDocumentName\":\"<ADD STRING
+            VALUE>\",\"isMultiPage\":false}}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"header\":{\"ID\":\"<ADD
+            STRING VALUE>\",\"application\":\"<ADD STRING
+            VALUE>\",\"bank\":\"<ADD STRING VALUE>\",\"hostSession\":\"<ADD
+            STRING VALUE>\",\"channel\":\"<ADD STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"declaredDocumentType\":\"<ADD STRING
+            VALUE>\",\"initialDocument\":\"<ADD STRING
+            VALUE>\",\"initialDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"initialDocumentName\":\"<ADD STRING
+            VALUE>\",\"isMultiPage\":false}}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument\"\n\n\tpayload := strings.NewReader(\"{\\\"header\\\":{\\\"ID\\\":\\\"<ADD STRING VALUE>\\\",\\\"application\\\":\\\"<ADD STRING VALUE>\\\",\\\"bank\\\":\\\"<ADD STRING VALUE>\\\",\\\"hostSession\\\":\\\"<ADD STRING VALUE>\\\",\\\"channel\\\":\\\"<ADD STRING VALUE>\\\",\\\"customer\\\":0,\\\"logitude\\\":0,\\\"latitude\\\":0,\\\"go4moreMember\\\":false,\\\"TAN\\\":\\\"<ADD STRING VALUE>\\\"},\\\"payload\\\":{\\\"declaredDocumentType\\\":\\\"<ADD STRING VALUE>\\\",\\\"initialDocument\\\":\\\"<ADD STRING VALUE>\\\",\\\"initialDocumentFormat\\\":\\\"<ADD STRING VALUE>\\\",\\\"initialDocumentName\\\":\\\"<ADD STRING VALUE>\\\",\\\"isMultiPage\\\":false}}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"header\":{\"ID\":\"<ADD STRING VALUE>\",\"application\":\"<ADD
+            STRING VALUE>\",\"bank\":\"<ADD STRING
+            VALUE>\",\"hostSession\":\"<ADD STRING VALUE>\",\"channel\":\"<ADD
+            STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"declaredDocumentType\":\"<ADD STRING
+            VALUE>\",\"initialDocument\":\"<ADD STRING
+            VALUE>\",\"initialDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"initialDocumentName\":\"<ADD STRING
+            VALUE>\",\"isMultiPage\":false}}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { header:
+                  { ID: '<ADD STRING VALUE>',
+                    application: '<ADD STRING VALUE>',
+                    bank: '<ADD STRING VALUE>',
+                    hostSession: '<ADD STRING VALUE>',
+                    channel: '<ADD STRING VALUE>',
+                    customer: 0,
+                    logitude: 0,
+                    latitude: 0,
+                    go4moreMember: false,
+                    TAN: '<ADD STRING VALUE>' },
+                 payload:
+                  { declaredDocumentType: '<ADD STRING VALUE>',
+                    initialDocument: '<ADD STRING VALUE>',
+                    initialDocumentFormat: '<ADD STRING VALUE>',
+                    initialDocumentName: '<ADD STRING VALUE>',
+                    isMultiPage: false } },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"header\":{\"ID\":\"<ADD STRING VALUE>\",\"application\":\"<ADD STRING VALUE>\",\"bank\":\"<ADD STRING VALUE>\",\"hostSession\":\"<ADD STRING VALUE>\",\"channel\":\"<ADD STRING VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD STRING VALUE>\"},\"payload\":{\"declaredDocumentType\":\"<ADD STRING VALUE>\",\"initialDocument\":\"<ADD STRING VALUE>\",\"initialDocumentFormat\":\"<ADD STRING VALUE>\",\"initialDocumentName\":\"<ADD STRING VALUE>\",\"isMultiPage\":false}}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox_id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"header\":{\"ID\":\"<ADD STRING
+            VALUE>\",\"application\":\"<ADD STRING VALUE>\",\"bank\":\"<ADD
+            STRING VALUE>\",\"hostSession\":\"<ADD STRING
+            VALUE>\",\"channel\":\"<ADD STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"declaredDocumentType\":\"<ADD STRING
+            VALUE>\",\"initialDocument\":\"<ADD STRING
+            VALUE>\",\"initialDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"initialDocumentName\":\"<ADD STRING
+            VALUE>\",\"isMultiPage\":false}}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST",
+            "/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument", payload,
+            headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"header\":{\"ID\":\"<ADD STRING
+            VALUE>\",\"application\":\"<ADD STRING VALUE>\",\"bank\":\"<ADD
+            STRING VALUE>\",\"hostSession\":\"<ADD STRING
+            VALUE>\",\"channel\":\"<ADD STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"declaredDocumentType\":\"<ADD STRING
+            VALUE>\",\"initialDocument\":\"<ADD STRING
+            VALUE>\",\"initialDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"initialDocumentName\":\"<ADD STRING
+            VALUE>\",\"isMultiPage\":false}}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/uploadDocument \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --data '{"header":{"ID":"<ADD STRING VALUE>","application":"<ADD STRING VALUE>","bank":"<ADD STRING VALUE>","hostSession":"<ADD STRING VALUE>","channel":"<ADD STRING VALUE>","customer":0,"logitude":0,"latitude":0,"go4moreMember":false,"TAN":"<ADD STRING VALUE>"},"payload":{"declaredDocumentType":"<ADD STRING VALUE>","initialDocument":"<ADD STRING VALUE>","initialDocumentFormat":"<ADD STRING VALUE>","initialDocumentName":"<ADD STRING VALUE>","isMultiPage":false}}'
+  /OcrDocument/getInfo:
+    post:
+      tags:
+        - OcrDocument
+      summary: Get Document Info
+      description: " This API call can be used in two different ways. \n  1. Given a *null* documentTypeId, it returns information about all available document types which can be processed for OCR along with the recognized fields and the file formats supported for each document type. \n\n 2. Given a specific documentTypeId, it returns information about a specific document type which can be processed for OCR along with the the recognized fields and the file formats supported for this particular document type.\n\n\r\n\r\n\r\nSample request: \r\n \r\n    POST /getInfo \r\n    { \r\n       \"documentTypeId\" : \"1cc5088d-2e92-41e6-b012-62dd0200bf16\" \r\n    }"
+      operationId: OcrDocument_getInfo
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.GetInfoRequest
+        - name: sandbox_id
+          in: header
+          description: Sandbox ID
+          required: true
+          type: string
+          default: ''
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.GetInfoResponse
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "sandbox_id:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS,
+            "{\"header\":{\"ID\":\"<ADD STRING VALUE>\",\"application\":\"<ADD
+            STRING VALUE>\",\"bank\":\"<ADD STRING
+            VALUE>\",\"hostSession\":\"<ADD STRING VALUE>\",\"channel\":\"<ADD
+            STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"documentTypeId\":\"<ADD STRING
+            VALUE>\"}}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("sandbox_id", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"header\":{\"ID\":\"<ADD
+            STRING VALUE>\",\"application\":\"<ADD STRING
+            VALUE>\",\"bank\":\"<ADD STRING VALUE>\",\"hostSession\":\"<ADD
+            STRING VALUE>\",\"channel\":\"<ADD STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"documentTypeId\":\"<ADD STRING
+            VALUE>\"}}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo\"\n\n\tpayload := strings.NewReader(\"{\\\"header\\\":{\\\"ID\\\":\\\"<ADD STRING VALUE>\\\",\\\"application\\\":\\\"<ADD STRING VALUE>\\\",\\\"bank\\\":\\\"<ADD STRING VALUE>\\\",\\\"hostSession\\\":\\\"<ADD STRING VALUE>\\\",\\\"channel\\\":\\\"<ADD STRING VALUE>\\\",\\\"customer\\\":0,\\\"logitude\\\":0,\\\"latitude\\\":0,\\\"go4moreMember\\\":false,\\\"TAN\\\":\\\"<ADD STRING VALUE>\\\"},\\\"payload\\\":{\\\"documentTypeId\\\":\\\"<ADD STRING VALUE>\\\"}}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"sandbox_id\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"header\":{\"ID\":\"<ADD STRING VALUE>\",\"application\":\"<ADD
+            STRING VALUE>\",\"bank\":\"<ADD STRING
+            VALUE>\",\"hostSession\":\"<ADD STRING VALUE>\",\"channel\":\"<ADD
+            STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"documentTypeId\":\"<ADD STRING
+            VALUE>\"}}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("sandbox_id", "SOME_STRING_VALUE")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url:
+               'https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 sandbox_id: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { header:
+                  { ID: '<ADD STRING VALUE>',
+                    application: '<ADD STRING VALUE>',
+                    bank: '<ADD STRING VALUE>',
+                    hostSession: '<ADD STRING VALUE>',
+                    channel: '<ADD STRING VALUE>',
+                    customer: 0,
+                    logitude: 0,
+                    latitude: 0,
+                    go4moreMember: false,
+                    TAN: '<ADD STRING VALUE>' },
+                 payload: { documentTypeId: '<ADD STRING VALUE>' } },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"header\":{\"ID\":\"<ADD STRING VALUE>\",\"application\":\"<ADD STRING VALUE>\",\"bank\":\"<ADD STRING VALUE>\",\"hostSession\":\"<ADD STRING VALUE>\",\"channel\":\"<ADD STRING VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD STRING VALUE>\"},\"payload\":{\"documentTypeId\":\"<ADD STRING VALUE>\"}}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json",
+                "sandbox_id: SOME_STRING_VALUE"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"header\":{\"ID\":\"<ADD STRING
+            VALUE>\",\"application\":\"<ADD STRING VALUE>\",\"bank\":\"<ADD
+            STRING VALUE>\",\"hostSession\":\"<ADD STRING
+            VALUE>\",\"channel\":\"<ADD STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"documentTypeId\":\"<ADD STRING
+            VALUE>\"}}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'sandbox_id': "SOME_STRING_VALUE",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST", "/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo",
+            payload, headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Post.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["sandbox_id"] = 'SOME_STRING_VALUE'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"header\":{\"ID\":\"<ADD STRING
+            VALUE>\",\"application\":\"<ADD STRING VALUE>\",\"bank\":\"<ADD
+            STRING VALUE>\",\"hostSession\":\"<ADD STRING
+            VALUE>\",\"channel\":\"<ADD STRING
+            VALUE>\",\"customer\":0,\"logitude\":0,\"latitude\":0,\"go4moreMember\":false,\"TAN\":\"<ADD
+            STRING VALUE>\"},\"payload\":{\"documentTypeId\":\"<ADD STRING
+            VALUE>\"}}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/OcrDocument/getInfo \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --header 'sandbox_id: SOME_STRING_VALUE' \
+              --data '{"header":{"ID":"<ADD STRING VALUE>","application":"<ADD STRING VALUE>","bank":"<ADD STRING VALUE>","hostSession":"<ADD STRING VALUE>","channel":"<ADD STRING VALUE>","customer":0,"logitude":0,"latitude":0,"go4moreMember":false,"TAN":"<ADD STRING VALUE>"},"payload":{"documentTypeId":"<ADD STRING VALUE>"}}'
+  /sandbox:
+    post:
+      tags:
+        - Sandbox
+      summary: Create Sandbox
+      description: >-
+        Creates sandbox with unique sandbox id. This call can also be used to
+        create  documents.
+      operationId: Sandbox_CreateSandbox
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: request
+          in: body
+          description: ''
+          required: true
+          schema:
+            $ref: '#/definitions/ocrdocument.sandbox.types.SandboxRequest'
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Response.ocrdocument.sandbox.types.SandboxDataModel
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "POST");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox");
+
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"sandboxId\":\"<ADD
+            STRING VALUE>\"}", ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox\"\n\n\tpayload := strings.NewReader(\"{\\\"sandboxId\\\":\\\"<ADD STRING VALUE>\\\"}\")\n\n\treq, _ := http.NewRequest(\"POST\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"sandboxId\":\"<ADD STRING VALUE>\"}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox")
+              .post(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'POST',
+              url: 'https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body: { sandboxId: '<ADD STRING VALUE>' },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "{\"sandboxId\":\"<ADD STRING VALUE>\"}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("POST", "/sandbox/ocr/oauth2/v1.3/sandbox", payload,
+            headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: |-
+            require 'uri'
+            require 'net/http'
+
+            url = URI("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox")
+
+            http = Net::HTTP.new(url.host, url.port)
+            http.use_ssl = true
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+            request = Net::HTTP::Post.new(url)
+            request["accept"] = 'application/json'
+            request["content-type"] = 'application/json'
+            request["authorization"] = 'SOME_STRING_VALUE'
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+            request.body = "{\"sandboxId\":\"<ADD STRING VALUE>\"}"
+
+            response = http.request(request)
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request POST \
+              --url https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"sandboxId":"<ADD STRING VALUE>"}'
+  '/sandbox/{sandbox_id}':
+    get:
+      tags:
+        - Sandbox
+      summary: Export Sandbox
+      description: Export Sandbox data specified by sandbox id.
+      operationId: Sandbox_ExportSandbox
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: sandbox_id
+          in: path
+          description: Sandbox ID
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Response.ocrdocument.sandbox.types.SandboxDataModel
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "GET");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.GET);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"GET\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D")
+              .get()
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url:
+               'https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("GET",
+            "/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Get.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request GET \
+              --url https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json'
+    put:
+      tags:
+        - Sandbox
+      summary: Import Sandbox
+      description: Imports sandbox data specified by sandbox id.
+      operationId: Sandbox_ImportSandbox
+      consumes:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: sandbox_id
+          in: path
+          description: Sandbox ID
+          required: true
+          type: string
+        - name: request
+          in: body
+          description: ''
+          required: true
+          schema:
+            $ref: '#/definitions/ocrdocument.sandbox.types.SandboxDataModel'
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: >-
+              #/definitions/ibank.Hosting.WebApi.Response.ocrdocument.sandbox.types.SandboxDataModel
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "PUT");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            headers = curl_slist_append(headers, "accept: application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            curl_easy_setopt(hnd, CURLOPT_POSTFIELDS, "{\"SandboxID\":\"<ADD
+            STRING VALUE>\",\"Documents\":[{\"DocumentType\":\"<ADD STRING
+            VALUE>\",\"DocumentProximity\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocument\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentType\":\"<ADD STRING
+            VALUE>\",\"Items\":[{\"PropertyName\":\"<ADD STRING
+            VALUE>\",\"PropertyValue\":\"<ADD STRING
+            VALUE>\",\"Proximity\":\"<ADD STRING VALUE>\",\"Type\":\"<ADD STRING
+            VALUE>\",\"WordProximity\":\"<ADD STRING
+            VALUE>\"}],\"InitialDocumentFormat\":\"<ADD STRING VALUE>\"}]}");
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.PUT);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            request.AddHeader("accept", "application/json");
+
+            request.AddParameter("application/json", "{\"SandboxID\":\"<ADD
+            STRING VALUE>\",\"Documents\":[{\"DocumentType\":\"<ADD STRING
+            VALUE>\",\"DocumentProximity\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocument\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentType\":\"<ADD STRING
+            VALUE>\",\"Items\":[{\"PropertyName\":\"<ADD STRING
+            VALUE>\",\"PropertyValue\":\"<ADD STRING
+            VALUE>\",\"Proximity\":\"<ADD STRING VALUE>\",\"Type\":\"<ADD STRING
+            VALUE>\",\"WordProximity\":\"<ADD STRING
+            VALUE>\"}],\"InitialDocumentFormat\":\"<ADD STRING VALUE>\"}]}",
+            ParameterType.RequestBody);
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D\"\n\n\tpayload := strings.NewReader(\"{\\\"SandboxID\\\":\\\"<ADD STRING VALUE>\\\",\\\"Documents\\\":[{\\\"DocumentType\\\":\\\"<ADD STRING VALUE>\\\",\\\"DocumentProximity\\\":\\\"<ADD STRING VALUE>\\\",\\\"ExtractedDocument\\\":\\\"<ADD STRING VALUE>\\\",\\\"ExtractedDocumentFormat\\\":\\\"<ADD STRING VALUE>\\\",\\\"ExtractedDocumentType\\\":\\\"<ADD STRING VALUE>\\\",\\\"Items\\\":[{\\\"PropertyName\\\":\\\"<ADD STRING VALUE>\\\",\\\"PropertyValue\\\":\\\"<ADD STRING VALUE>\\\",\\\"Proximity\\\":\\\"<ADD STRING VALUE>\\\",\\\"Type\\\":\\\"<ADD STRING VALUE>\\\",\\\"WordProximity\\\":\\\"<ADD STRING VALUE>\\\"}],\\\"InitialDocumentFormat\\\":\\\"<ADD STRING VALUE>\\\"}]}\")\n\n\treq, _ := http.NewRequest(\"PUT\", url, payload)\n\n\treq.Header.Add(\"accept\", \"application/json\")\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: >-
+            OkHttpClient client = new OkHttpClient();
+
+
+            MediaType mediaType = MediaType.parse("application/json");
+
+            RequestBody body = RequestBody.create(mediaType,
+            "{\"SandboxID\":\"<ADD STRING
+            VALUE>\",\"Documents\":[{\"DocumentType\":\"<ADD STRING
+            VALUE>\",\"DocumentProximity\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocument\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentType\":\"<ADD STRING
+            VALUE>\",\"Items\":[{\"PropertyName\":\"<ADD STRING
+            VALUE>\",\"PropertyValue\":\"<ADD STRING
+            VALUE>\",\"Proximity\":\"<ADD STRING VALUE>\",\"Type\":\"<ADD STRING
+            VALUE>\",\"WordProximity\":\"<ADD STRING
+            VALUE>\"}],\"InitialDocumentFormat\":\"<ADD STRING VALUE>\"}]}");
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D")
+              .put(body)
+              .addHeader("accept", "application/json")
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'PUT',
+              url:
+               'https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json',
+                 accept: 'application/json' },
+              body:
+               { SandboxID: '<ADD STRING VALUE>',
+                 Documents:
+                  [ { DocumentType: '<ADD STRING VALUE>',
+                      DocumentProximity: '<ADD STRING VALUE>',
+                      ExtractedDocument: '<ADD STRING VALUE>',
+                      ExtractedDocumentFormat: '<ADD STRING VALUE>',
+                      ExtractedDocumentType: '<ADD STRING VALUE>',
+                      Items:
+                       [ { PropertyName: '<ADD STRING VALUE>',
+                           PropertyValue: '<ADD STRING VALUE>',
+                           Proximity: '<ADD STRING VALUE>',
+                           Type: '<ADD STRING VALUE>',
+                           WordProximity: '<ADD STRING VALUE>' } ],
+                      InitialDocumentFormat: '<ADD STRING VALUE>' } ] },
+              json: true };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "PUT",
+              CURLOPT_POSTFIELDS => "{\"SandboxID\":\"<ADD STRING VALUE>\",\"Documents\":[{\"DocumentType\":\"<ADD STRING VALUE>\",\"DocumentProximity\":\"<ADD STRING VALUE>\",\"ExtractedDocument\":\"<ADD STRING VALUE>\",\"ExtractedDocumentFormat\":\"<ADD STRING VALUE>\",\"ExtractedDocumentType\":\"<ADD STRING VALUE>\",\"Items\":[{\"PropertyName\":\"<ADD STRING VALUE>\",\"PropertyValue\":\"<ADD STRING VALUE>\",\"Proximity\":\"<ADD STRING VALUE>\",\"Type\":\"<ADD STRING VALUE>\",\"WordProximity\":\"<ADD STRING VALUE>\"}],\"InitialDocumentFormat\":\"<ADD STRING VALUE>\"}]}",
+              CURLOPT_HTTPHEADER => array(
+                "accept: application/json",
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            payload = "{\"SandboxID\":\"<ADD STRING
+            VALUE>\",\"Documents\":[{\"DocumentType\":\"<ADD STRING
+            VALUE>\",\"DocumentProximity\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocument\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentType\":\"<ADD STRING
+            VALUE>\",\"Items\":[{\"PropertyName\":\"<ADD STRING
+            VALUE>\",\"PropertyValue\":\"<ADD STRING
+            VALUE>\",\"Proximity\":\"<ADD STRING VALUE>\",\"Type\":\"<ADD STRING
+            VALUE>\",\"WordProximity\":\"<ADD STRING
+            VALUE>\"}],\"InitialDocumentFormat\":\"<ADD STRING VALUE>\"}]}"
+
+
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("PUT",
+            "/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D", payload,
+            headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Put.new(url)
+
+            request["accept"] = 'application/json'
+
+            request["content-type"] = 'application/json'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+            request.body = "{\"SandboxID\":\"<ADD STRING
+            VALUE>\",\"Documents\":[{\"DocumentType\":\"<ADD STRING
+            VALUE>\",\"DocumentProximity\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocument\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentFormat\":\"<ADD STRING
+            VALUE>\",\"ExtractedDocumentType\":\"<ADD STRING
+            VALUE>\",\"Items\":[{\"PropertyName\":\"<ADD STRING
+            VALUE>\",\"PropertyValue\":\"<ADD STRING
+            VALUE>\",\"Proximity\":\"<ADD STRING VALUE>\",\"Type\":\"<ADD STRING
+            VALUE>\",\"WordProximity\":\"<ADD STRING
+            VALUE>\"}],\"InitialDocumentFormat\":\"<ADD STRING VALUE>\"}]}"
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request PUT \
+              --url https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D \
+              --header 'accept: application/json' \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json' \
+              --data '{"SandboxID":"<ADD STRING VALUE>","Documents":[{"DocumentType":"<ADD STRING VALUE>","DocumentProximity":"<ADD STRING VALUE>","ExtractedDocument":"<ADD STRING VALUE>","ExtractedDocumentFormat":"<ADD STRING VALUE>","ExtractedDocumentType":"<ADD STRING VALUE>","Items":[{"PropertyName":"<ADD STRING VALUE>","PropertyValue":"<ADD STRING VALUE>","Proximity":"<ADD STRING VALUE>","Type":"<ADD STRING VALUE>","WordProximity":"<ADD STRING VALUE>"}],"InitialDocumentFormat":"<ADD STRING VALUE>"}]}'
+    delete:
+      tags:
+        - Sandbox
+      summary: Delete Sandbox
+      description: Delete Sandbox specified by sandbox id.
+      operationId: Sandbox_DeleteSandbox
+      consumes: []
+      produces:
+        - application/json
+        - text/json
+        - application/xml
+        - text/xml
+      parameters:
+        - name: sandbox_id
+          in: path
+          description: Sandbox ID
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Authorization Bearer
+          required: true
+          type: string
+          default: 'Bearer '
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: object
+      x-code-samples:
+        - lang: C
+          source: >-
+            CURL *hnd = curl_easy_init();
+
+
+            curl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, "DELETE");
+
+            curl_easy_setopt(hnd, CURLOPT_URL,
+            "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D");
+
+
+            struct curl_slist *headers = NULL;
+
+            headers = curl_slist_append(headers, "client-id:
+            SOME_APIKEY_VALUE");
+
+            headers = curl_slist_append(headers, "authorization:
+            SOME_STRING_VALUE");
+
+            headers = curl_slist_append(headers, "content-type:
+            application/json");
+
+            curl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);
+
+
+            CURLcode ret = curl_easy_perform(hnd);
+        - lang: 'C#'
+          source: >-
+            var client = new
+            RestClient("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D");
+
+            var request = new RestRequest(Method.DELETE);
+
+            request.AddHeader("client-id", "SOME_APIKEY_VALUE");
+
+            request.AddHeader("authorization", "SOME_STRING_VALUE");
+
+            request.AddHeader("content-type", "application/json");
+
+            IRestResponse response = client.Execute(request);
+        - lang: Go
+          source: "package main\n\nimport (\n\t\"fmt\"\n\t\"net/http\"\n\t\"io/ioutil\"\n)\n\nfunc main() {\n\n\turl := \"https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D\"\n\n\treq, _ := http.NewRequest(\"DELETE\", url, nil)\n\n\treq.Header.Add(\"content-type\", \"application/json\")\n\treq.Header.Add(\"authorization\", \"SOME_STRING_VALUE\")\n\treq.Header.Add(\"client-id\", \"SOME_APIKEY_VALUE\")\n\n\tres, _ := http.DefaultClient.Do(req)\n\n\tdefer res.Body.Close()\n\tbody, _ := ioutil.ReadAll(res.Body)\n\n\tfmt.Println(res)\n\tfmt.Println(string(body))\n\n}"
+        - lang: Java
+          source: |-
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D")
+              .delete(null)
+              .addHeader("content-type", "application/json")
+              .addHeader("authorization", "SOME_STRING_VALUE")
+              .addHeader("client-id", "SOME_APIKEY_VALUE")
+              .build();
+
+            Response response = client.newCall(request).execute();
+        - lang: Node
+          source: |
+            var request = require("request");
+
+            var options = { method: 'DELETE',
+              url:
+               'https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D',
+              headers:
+               { 'client-id': 'SOME_APIKEY_VALUE',
+                 authorization: 'SOME_STRING_VALUE',
+                 'content-type': 'application/json' } };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: PHP
+          source: |-
+            <?php
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "DELETE",
+              CURLOPT_HTTPHEADER => array(
+                "authorization: SOME_STRING_VALUE",
+                "client-id: SOME_APIKEY_VALUE",
+                "content-type: application/json"
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              echo "cURL Error #:" . $err;
+            } else {
+              echo $response;
+            }
+        - lang: Python
+          source: >-
+            import http.client
+
+
+            conn = http.client.HTTPSConnection("apis.nbg.gr")
+
+
+            headers = {
+                'content-type': "application/json",
+                'authorization': "SOME_STRING_VALUE",
+                'client-id': "SOME_APIKEY_VALUE"
+                }
+
+            conn.request("DELETE",
+            "/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D",
+            headers=headers)
+
+
+            res = conn.getresponse()
+
+            data = res.read()
+
+
+            print(data.decode("utf-8"))
+        - lang: Ruby
+          source: >-
+            require 'uri'
+
+            require 'net/http'
+
+
+            url =
+            URI("https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D")
+
+
+            http = Net::HTTP.new(url.host, url.port)
+
+            http.use_ssl = true
+
+            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+
+            request = Net::HTTP::Delete.new(url)
+
+            request["content-type"] = 'application/json'
+
+            request["authorization"] = 'SOME_STRING_VALUE'
+
+            request["client-id"] = 'SOME_APIKEY_VALUE'
+
+
+            response = http.request(request)
+
+            puts response.read_body
+        - lang: cUrl
+          source: |-
+            curl --request DELETE \
+              --url https://apis.nbg.gr/sandbox/ocr/oauth2/v1.3/sandbox/%7Bsandbox_id%7D \
+              --header 'authorization: SOME_STRING_VALUE' \
+              --header 'client-id: SOME_APIKEY_VALUE' \
+              --header 'content-type: application/json'
+definitions:
+  ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.OcrUploadRequest:
+    required:
+      - header
+      - payload
+    type: object
+    properties:
+      header: &ref_0
+        required:
+          - ID
+        type: object
+        properties:
+          ID:
+            type: string
+          application:
+            type: string
+          bank:
+            type: string
+          hostSession:
+            type: string
+          channel:
+            type: string
+          customer:
+            format: double
+            type: number
+          logitude:
+            format: double
+            type: number
+          latitude:
+            format: double
+            type: number
+          go4moreMember:
+            type: boolean
+          TAN:
+            type: string
+      payload: &ref_1
+        description: Ocr Upload Request
+        required:
+          - declaredDocumentType
+          - initialDocument
+          - initialDocumentFormat
+          - initialDocumentName
+        type: object
+        properties:
+          declaredDocumentType:
+            format: uuid
+            description: >-
+              The type of the document (e.g.
+              1782d81f-5ac0-4a71-ae44-97cf1b6f348d)
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+          initialDocument:
+            format: byte
+            description: >-
+              The document that is sent for OCR (base64 encoding). Maximum size
+              5MB
+            type: string
+          initialDocumentFormat:
+            description: The document format (e.g. jpg)
+            type: string
+          initialDocumentName:
+            description: The document name (e.g. myDocument).
+            type: string
+          isMultiPage:
+            description: If the document has multiple pages
+            type: boolean
+  ibank.Hosting.WebApi.RequestHeader: *ref_0
+  OCRDocument.Interfaces.OcrUploadRequest: *ref_1
+  ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.OcrUploadResponse:
+    type: object
+    properties:
+      payload:
+        $ref: '#/definitions/OCRDocument.Interfaces.OcrUploadResponse'
+      exception:
+        $ref: '#/definitions/bUtility.ResponseMessage'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/bUtility.ResponseMessage'
+      executionTime:
+        format: double
+        type: number
+  OCRDocument.Interfaces.OcrUploadResponse:
+    description: Ocr Upload Response
+    type: object
+    properties:
+      documentProximity:
+        description: The confidence value of the document contents recognition
+        type: string
+      documentType:
+        description: The type of the document
+        type: string
+      extractedDocument:
+        format: byte
+        description: The content of the returned document
+        type: string
+      extractedDocumentFormat:
+        description: The returned document format (e.g. tif)
+        type: string
+      extractedDocumentType:
+        format: uuid
+        description: The type of the returned document
+        type: string
+        example: 00000000-0000-0000-0000-000000000000
+      initialDocumentFormat:
+        description: The format of the initial document (e.g. pdf)
+        type: string
+      items:
+        description: The list of extracted items
+        type: array
+        items:
+          $ref: '#/definitions/OCRDocument.Interfaces.ItemField'
+  bUtility.ResponseMessage:
+    type: object
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      desc:
+        type: string
+      sev:
+        enum:
+          - Warning
+          - Error
+          - Info
+        type: string
+      cat:
+        enum:
+          - Business
+          - Communication
+          - Technical
+          - Security
+        type: string
+  OCRDocument.Interfaces.ItemField:
+    description: The items that are extracted from OCR
+    type: object
+    properties:
+      propertyName:
+        description: The name of the property (for example "Greek_Sur_Name")
+        type: string
+      propertyValue:
+        description: The value of the property (for example "PAPADOPOULOS")
+        type: string
+      proximity:
+        description: 'The confidence value of the character recognition (for example "8,5")'
+        type: string
+      type:
+        description: The type of the item (for example "string")
+        type: string
+      wordProximity:
+        description: 'The confidence value of the word recognition (for example "9,00")'
+        type: string
+  ibank.Hosting.WebApi.Request.OCRDocument.Interfaces.GetInfoRequest:
+    required:
+      - header
+      - payload
+    type: object
+    properties:
+      header: *ref_0
+      payload: &ref_2
+        description: Get info request
+        type: object
+        properties:
+          documentTypeId:
+            format: uuid
+            description: >-
+              The typeId of the document to get information about (for example
+              about "passports" the documentTypeId
+              ='1cc5088d-2e92-41e6-b012-62dd0200bf16')
+            type: string
+            example: 00000000-0000-0000-0000-000000000000
+  OCRDocument.Interfaces.GetInfoRequest: *ref_2
+  ibank.Hosting.WebApi.Response.OCRDocument.Interfaces.GetInfoResponse:
+    type: object
+    properties:
+      payload:
+        $ref: '#/definitions/OCRDocument.Interfaces.GetInfoResponse'
+      exception:
+        $ref: '#/definitions/bUtility.ResponseMessage'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/bUtility.ResponseMessage'
+      executionTime:
+        format: double
+        type: number
+  OCRDocument.Interfaces.GetInfoResponse:
+    description: Get InfoResponse
+    type: object
+    properties:
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/OCRDocument.Interfaces.AvailableDoc'
+      generalInfo:
+        description: Returns general information about the document
+        type: string
+  OCRDocument.Interfaces.AvailableDoc:
+    description: Retuns the documents that can be recognized
+    type: object
+    properties:
+      id:
+        format: uuid
+        description: The id of the document
+        type: string
+        example: 00000000-0000-0000-0000-000000000000
+      name:
+        description: The name of the document (for example "passport")
+        type: string
+      recognizeFields:
+        description: The list of fields that can be recognized
+        type: array
+        items:
+          $ref: '#/definitions/OCRDocument.Interfaces.RecognizeField'
+      returnDocTypes:
+        description: The returned document types
+        type: array
+        items:
+          type: string
+      recognizeFormats:
+        description: The returned recognized formats
+        type: array
+        items:
+          type: string
+  OCRDocument.Interfaces.RecognizeField:
+    description: The fields that can be recognized
+    type: object
+    properties:
+      name:
+        description: The name of the field
+        type: string
+      type:
+        description: The type of the field
+        type: string
+      description:
+        description: The description of the field
+        type: string
+  ocrdocument.sandbox.types.SandboxRequest:
+    description: Create sandbox request
+    type: object
+    properties:
+      sandboxId:
+        description: Sandbox ID
+        type: string
+  ibank.Hosting.WebApi.Response.ocrdocument.sandbox.types.SandboxDataModel:
+    type: object
+    properties:
+      payload:
+        $ref: '#/definitions/ocrdocument.sandbox.types.SandboxDataModel'
+      exception:
+        $ref: '#/definitions/bUtility.ResponseMessage'
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/bUtility.ResponseMessage'
+      executionTime:
+        format: double
+        type: number
+  ocrdocument.sandbox.types.SandboxDataModel:
+    description: Sandbox data model
+    type: object
+    properties:
+      SandboxID:
+        description: Sandbox unique identifier. E.g MySandbox
+        type: string
+      Documents:
+        description: List of sandbox Documents
+        type: array
+        items: &ref_3
+          description: Sandbox document
+          type: object
+          properties:
+            DocumentType:
+              description: The type of the document
+              type: string
+            DocumentProximity:
+              description: The proximity of the document
+              type: string
+            ExtractedDocument:
+              format: byte
+              description: The Document returned by the OCR API
+              type: string
+            ExtractedDocumentFormat:
+              description: The returned document format (e.g. tif)
+              type: string
+            ExtractedDocumentType:
+              format: uuid
+              description: The type of the document according to OCR
+              type: string
+              example: 00000000-0000-0000-0000-000000000000
+            Items:
+              description: >-
+                The items that are extracted from OCR according to the initial
+                document
+              type: array
+              items: &ref_4
+                description: The items that are extracted from OCR
+                type: object
+                properties:
+                  PropertyName:
+                    description: The name of the property (for example "Greek_Sur_Name")
+                    type: string
+                  PropertyValue:
+                    description: The value of the property (for example "PAPADOPOULOS")
+                    type: string
+                  Proximity:
+                    description: 'The proximity of the item (for example "8,5")'
+                    type: string
+                  Type:
+                    description: The type of the item (for example "string")
+                    type: string
+                  WordProximity:
+                    description: 'The word proximity of the item (for example "9,00")'
+                    type: string
+            InitialDocumentFormat:
+              description: The format of the initial document
+              type: string
+  ocrdocument.sandbox.types.SandboxDocument: *ref_3
+  ocrdocument.sandbox.types.SandboxField: *ref_4
+securityDefinitions:
+  Client-Id:
+    type: apiKey
+    description: Application's Id
+    name: Client-Id
+    in: header
+security:
+  - Client-Id: []
