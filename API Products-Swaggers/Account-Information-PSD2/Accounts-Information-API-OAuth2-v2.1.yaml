@@ -4,10 +4,10 @@ info:
   description: >
     Start integrating your application with our Bank and give your client the
     options to: 
-    1.  View their account list
-    2.  View their account details    
-    3.  View their account balances
-    4.  View their account transactions
+    1.  View their account/card list
+    2.  View their account/card details    
+    3.  View their account/card balances
+    4.  View their account/card transactions
     This Sandbox API optionally simulates the user consent flow required for
     Account Information Services. Please refer to the Quick Getting Started
     guide below, that provides the necessary steps to start playing with the
@@ -35,7 +35,7 @@ info:
     credentials that you used to sign in as a developer) and the **API scopes**
     provided in the Authentication and Authorization (OAuth2) section below
     2. Create a **Sandbox**.
-    3. **Optional** â€“ **Signature validation**
+    3. **Optional**  **Signature validation**
     If you have already obtained an eIDAS certificate (Qualified Certificate for
     Seals - QSeal) that you would like to use, please set in all HTTP headers
     the following:
@@ -44,7 +44,7 @@ info:
       3. **Signature** (Detached JWS signature)
       
     For more information check the QSeal Certificates section below.
-    4. **Optional** â€“ Get the **customerâ€™s consent**
+    4. **Optional**  Get the **customers consent**
     If you want to **enable the user consent validation** you must follow the
     consent flow as described below:
       1. Set the **X-Consent-Check HTTP** header to **true**
@@ -892,7 +892,7 @@ info:
     | allowConnect| Connection indicator| string|
     | allowDebit| Account debit indicator(if 1 debit is allowed)| string|
     | allowCredit| Account credit indicator (A two digits string XY where if X=1
-    then credit is allowed from the user and if Î¥=1 then credit is allowed from
+    then credit is allowed from the user and if ¥=1 then credit is allowed from
     a third user)| string|
     | isOwnAccount| -| boolean|
     | newMoneyBalance| Available balance for transfer abroad| number|
@@ -938,9 +938,9 @@ info:
     | serialNum| Just the serial number of this entry| string|
     | date| Date of this transaction (UTC)| string|
     | branch| Branch| string|
-    | trans| Code for transaction type, e.g. <code>"10"</code> for "ÎšÎ±Ï„Î¬Î¸ÎµÏƒÎ·"|
+    | trans| Code for transaction type, e.g. <code>"10"</code> for "š±Ä¬¸µÃ·"|
     string|
-    | transDescription| Description for transaction type, e.g. "ÎšÎ±Ï„Î¬Î¸ÎµÏƒÎ·"|
+    | transDescription| Description for transaction type, e.g. "š±Ä¬¸µÃ·"|
     string|
     | amount| Amount of this transaction in the currency of the transaction|
     number|
@@ -966,7 +966,7 @@ info:
     | Name| Description| Values|
     | -----| -----| -----|
     | accountType| Code for account type, e.g. <code>10</code> for
-    "Î¤Î±Î¼Î¹ÎµÏ…Ï„Î®ÏÎ¹Î¿"| string|
+    "¤±¼¹µÅÄ®Á¹¿"| string|
     | overdraftLimit| Overdraft limit| number|
     | numberOfMandates| Number of mandates| integer|
     | serialNo| Just the serial number of this entry| string|
@@ -1010,7 +1010,7 @@ info:
     | account| The NBG account number (e.g. 11 digits).| string|
     | iban| Account IBAN.| string|
     | accountType| Code for account type, e.g. <code>10</code> for
-    "Î¤Î±Î¼Î¹ÎµÏ…Ï„Î®ÏÎ¹Î¿"| string|
+    "¤±¼¹µÅÄ®Á¹¿"| string|
     | currency| Currency, 3-letter code , e.g. <code>EUR</code>| string|
     | alias| Friendly name| string|
     | product| Account product code| string|
@@ -1035,7 +1035,7 @@ info:
     | allowConnect| Connection indicator| string|
     | allowDebit| Account debit indicator(if 1 debit is allowed)| string|
     | allowCredit| Account credit indicator (A two digits string XY where if X=1
-    then credit is allowed from the user  and if Î¥=1 then credit is allowed from
+    then credit is allowed from the user  and if ¥=1 then credit is allowed from
     a third user)| string|
     | indicators| Other indicators| string|
     | ledgerAccount| Special account| string|
@@ -9083,7 +9083,7 @@ components:
           - serialNo: '1'
             accountType:
               code: '3000'
-              value: ÎšÎ‘Î¤Î‘Î˜Î•Î£Î•Î™Î£ Î¤Î‘ÎœÎ™Î•Î¥Î¤Î—Î¡Î™ÎŸÎ¥ - Î‘Î¤ÎŸÎœÎ™ÎšÎŸÎ£ Î›ÎŸÎ“/Î£ÎœÎŸÎ£
+              value: š‘¤‘˜•£•™£ ¤‘œ™•¥¤—¡™Ÿ¥ - ‘¤Ÿœ™šŸ£ ›Ÿ“/£œŸ£
             overdraftLimit: 0
             numberOfMandates: 0
             account: '1234567890'
@@ -9285,7 +9285,7 @@ components:
           iban: GR2801100800000001234567890
           accountType:
             code: '3000'
-            value: ÎšÎ‘Î¤Î‘Î˜Î•Î£Î•Î™Î£ Î¤Î‘ÎœÎ™Î•Î¥Î¤Î—Î¡Î™ÎŸÎ¥ - Î‘Î¤ÎŸÎœÎ™ÎšÎŸÎ£ Î›ÎŸÎ“/Î£ÎœÎŸÎ£
+            value: š‘¤‘˜•£•™£ ¤‘œ™•¥¤—¡™Ÿ¥ - ‘¤Ÿœ™šŸ£ ›Ÿ“/£œŸ£
           currency: EUR
           alias: alias
           ledgerBalance: 100000.12
@@ -9375,7 +9375,7 @@ components:
           description: Account debit indicator(if 1 debit is allowed)
           type: string
         allowCredit:
-          description: "Account credit indicator (A two digits string XY where if X=1 then credit is allowed from\r\nthe user and if Î¥=1 then credit is allowed from a third user)"
+          description: "Account credit indicator (A two digits string XY where if X=1 then credit is allowed from\r\nthe user and if ¥=1 then credit is allowed from a third user)"
           type: string
         isOwnAccount:
           type: boolean
@@ -9450,7 +9450,7 @@ components:
             date: '2019-02-08T12:37:26.959Z'
             branch: '700'
             trans: '68'
-            transDescription: ÎœÎ•Î¤Î‘Î¦ÎŸÎ¡Î‘ Î£Î• Î›ÎŸÎ“Î‘Î¡Î™Î‘Î£ÎœÎŸ
+            transDescription: œ•¤‘¦Ÿ¡‘ £• ›Ÿ“‘¡™‘£œŸ
             amount: -1
             currency: EUR
             amountEquivalent: -1
@@ -9467,7 +9467,7 @@ components:
             date: '2019-01-14T17:50:49+02:00'
             branch: '700'
             trans: '68'
-            transDescription: ÎœÎ•Î¤Î‘Î¦ÎŸÎ¡Î‘ Î£Î• Î›ÎŸÎ“Î‘Î¡Î™Î‘Î£ÎœÎŸ
+            transDescription: œ•¤‘¦Ÿ¡‘ £• ›Ÿ“‘¡™‘£œŸ
             amount: -10
             currency: EUR
             amountEquivalent: -10
@@ -9495,11 +9495,11 @@ components:
           description: Branch
           type: string
         trans:
-          description: 'Code for transaction type, e.g. <code>"10"</code> for "ÎšÎ±Ï„Î¬Î¸ÎµÏƒÎ·"'
+          description: 'Code for transaction type, e.g. <code>"10"</code> for "š±Ä¬¸µÃ·"'
           type: string
         transDescription:
           type: string
-          description: 'Description for transaction type, e.g. "ÎšÎ±Ï„Î¬Î¸ÎµÏƒÎ·"'
+          description: 'Description for transaction type, e.g. "š±Ä¬¸µÃ·"'
         amount:
           format: double
           description: Amount of this transaction in the currency of the transaction
@@ -9548,7 +9548,7 @@ components:
       type: object
       properties:
         accountType:
-          description: 'Code for account type, e.g. <code>10</code> for "Î¤Î±Î¼Î¹ÎµÏ…Ï„Î®ÏÎ¹Î¿"'
+          description: 'Code for account type, e.g. <code>10</code> for "¤±¼¹µÅÄ®Á¹¿"'
           type: string
         overdraftLimit:
           format: double
@@ -9645,7 +9645,7 @@ components:
           description: Account IBAN.
           type: string
         accountType:
-          description: 'Code for account type, e.g. <code>10</code> for "Î¤Î±Î¼Î¹ÎµÏ…Ï„Î®ÏÎ¹Î¿"'
+          description: 'Code for account type, e.g. <code>10</code> for "¤±¼¹µÅÄ®Á¹¿"'
           type: string
         currency:
           description: 'Currency, 3-letter code , e.g. <code>EUR</code>'
@@ -9733,7 +9733,7 @@ components:
         allowCredit:
           description: >-
             Account credit indicator (A two digits string XY where if X=1 then
-            credit is allowed from the user  and if Î¥=1 then credit is allowed
+            credit is allowed from the user  and if ¥=1 then credit is allowed
             from a third user)
           type: string
         indicators:
