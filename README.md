@@ -12,9 +12,9 @@ The git pull command is used to fetch and download content from a remote reposit
 
 With the "git branch" command we can see in which branch we are currently on.
 
-The "git fetch" command is basically checkning and making sure that updates have occured.
+The "git fetch" command is basically checking and making sure that updates have occured.
 
-And the "git pull" command we can pull down the updates that have been recently pushed . It is actually merging the updates fetched with the current branch.
+Finally with the "git pull" command we can pull down the updates that have been recently pushed . It is actually merging the updates fetched with the current branch.
 
 You can think of git pull as Git's version of svn update.
 
