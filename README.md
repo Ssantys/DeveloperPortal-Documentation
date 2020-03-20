@@ -12,7 +12,7 @@ We encourage you to contribute to the development of the documentation by follow
 
 ### 3. Submit a pull request to this repo
 
-Your request will be reviewd and the documentation, if needed, will be updated. We will celebrate though our channels each and every meaningful contribution however minor it might be.
+Your request will be reviewed and the documentation, if needed, will be updated. We will celebrate through our channels each and every meaningful contribution however minor it might be.
 
 ## Acknowledgments
 
